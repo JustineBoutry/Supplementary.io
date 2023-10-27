@@ -1,0 +1,217 @@
+```{r , include=FALSE}
+library(readr)
+library(ggplot2)
+library(glmulti)
+library(ggpubr)
+library(ggstatsplot)
+library(lme4)
+library(DHARMa)
+library(sjPlot)
+library(svglite)
+library(glmmTMB)
+library(lme4)
+library(MuMIn)
+library(glmulti)
+library(MASS)
+library(ggridges)
+library(lmtest)
+library(dplyr)
+library(patchwork)
+library(survival)
+library(modelsummary)
+
+load("data_1.RData")
+load(file="DonorSpontaneous.RData")
+load(file="DonorTransmitted.RData")
+```
+
+# Analysis of the mortality after grafting 
+
+## Transmissible tumors dataset
+
+### Random effects selection (according to _Zuur et al. 2009_)
+
+```{r Death model -random selection, echo=TRUE, warning=FALSE, width= 2}
+mr1 <- glmmTMB(data=donor_trans, Death ~ donor * donor_status + receiver + (1|lot) + (1|date_draft), family = binomial, REML = T)
+mr2 <- glmmTMB(data=donor_trans, Death ~ donor * donor_status + receiver + (1|date_draft/lot), family = binomial, REML = T)
+mr3 <- glmmTMB(data=donor_trans, Death ~ donor * donor_status + receiver + (1|lot), family = binomial, REML = T)
+mr4 <- glmmTMB(data=donor_trans, Death ~ donor * donor_status + receiver + (1|date_draft), family = binomial, REML = T)
+mr5 <- glmmTMB(data=donor_trans, Death ~ donor * donor_status + receiver, family = binomial, REML = T)
+
+AICc(mr1, mr2, mr3, mr4, mr5) 
+```
+
+There is no need to include any of the potential random effects that have been measured.
+
+### Fixed effects selection
+
+```{r}
+
+m1 <- glmmTMB(data=donor_trans, Death ~ donor * donor_status * receiver+ (1|date_draft), family = binomial, REML = F)
+m2 <- glmmTMB(data=donor_trans, Death ~ donor * donor_status + receiver+ (1|date_draft), family = binomial, REML = F)
+m3 <- glmmTMB(data=donor_trans, Death ~ donor + donor_status * receiver+ (1|date_draft), family = binomial, REML = F)
+m4 <- glmmTMB(data=donor_trans, Death ~ donor * receiver + donor_status+ (1|date_draft), family = binomial, REML = F)
+
+m5 <- glmmTMB(data=donor_trans, Death ~ donor + donor_status + receiver+ (1|date_draft), family = binomial, REML = F)
+m6 <- glmmTMB(data=donor_trans, Death ~ donor + donor_status+ (1|date_draft), family = binomial, REML = F)
+m7 <- glmmTMB(data=donor_trans, Death ~ donor + receiver+ (1|date_draft), family = binomial, REML = F)
+m8 <- glmmTMB(data=donor_trans, Death ~ donor_status + receiver+ (1|date_draft), family = binomial, REML = F)
+
+m9 <- glmmTMB(data=donor_trans, Death ~ donor * donor_status+ (1|date_draft), family = binomial, REML = F)
+m10 <- glmmTMB(data=donor_trans, Death ~ donor * receiver+ (1|date_draft), family = binomial, REML = F)
+m11 <- glmmTMB(data=donor_trans, Death ~ donor_status * receiver+ (1|date_draft), family = binomial, REML = F)
+
+m12 <- glmmTMB(data=donor_trans, Death ~ donor+ (1|date_draft), family = binomial, REML = F)
+m13 <- glmmTMB(data=donor_trans, Death ~ donor_status+ (1|date_draft), family = binomial, REML = F)
+m14 <- glmmTMB(data=donor_trans, Death ~ receiver+ (1|date_draft), family = binomial, REML = F)
+
+m15 <- glmmTMB(data=donor_trans, Death ~ 1+ (1|date_draft), family = binomial, REML = F)
+
+AICc(m1, m2, m3, m4, m5, m6, m7, m8, m9, m10, m11, m12, m13, m14, m15)
+```
+
+#### Table of the results of the best fitted models (lower AICc+2)
+
+```{r, echo = F}
+tab_model(m3, m10,show.intercept = F, show.r2 = F,show.re.var = F)
+```
+
+```{r, echo = F, results='hide'}
+simulateResiduals(m10, plot=T, refit=F)
+```
+
+```{r}
+m10 <- glmmTMB(data=donor_trans, Death ~ donor * receiver+ (1|date_draft), family = binomial, REML = T)
+tab_model(m10, show.intercept = F, show.r2 = F, show.re.var = F)
+```
+
+\
+The results are quite unclear, the best fitted models are a bit incoherent so it might just indicate a lack of power for analysis.
+
+## Spontaneaous tumors dataset
+
+### Random effects selection
+
+```{r}
+m1 <- glmmTMB(data=donor_spont, Death ~ donor + receiver + donor_status + (1|lot) + (1|date_draft), family = binomial, REML = T)
+m2 <- glmmTMB(data=donor_spont, Death ~ donor + donor_status + receiver + (1|date_draft/lot), family = binomial, REML = T)
+m3 <- glmmTMB(data=donor_spont, Death ~ donor + donor_status + receiver + (1|lot), family = binomial, REML = T)
+m4 <- glmmTMB(data=donor_spont, Death ~ donor + donor_status + receiver + (1|date_draft), family = binomial, REML = T)
+m5 <- glmmTMB(data=donor_spont, Death ~ donor + donor_status + receiver, family = binomial, REML = T)
+
+AICc(m1, m2, m3, m4, m5) 
+```
+\
+There is no need to include any of the potential random effects that have been measured.
+
+### Fixed effects selection
+
+```{r}
+m1 <- glmmTMB(data=donor_spont, Death ~ donor * donor_status * receiver, family = binomial, REML = F)
+m2 <- glmmTMB(data=donor_spont, Death ~ donor * donor_status + receiver, family = binomial, REML = F)
+m3 <- glmmTMB(data=donor_spont, Death ~ donor * receiver + donor_status, family = binomial, REML = F)
+m4 <- glmmTMB(data=donor_spont, Death ~ donor + receiver * donor_status, family = binomial, REML = F)
+
+m5 <- glmmTMB(data=donor_spont, Death ~ donor + donor_status + receiver, family = binomial, REML = F)
+
+m6 <- glmmTMB(data=donor_spont, Death ~ donor + donor_status, family = binomial, REML = F)
+m7 <- glmmTMB(data=donor_spont, Death ~ donor + receiver, family = binomial, REML = F)
+m8 <- glmmTMB(data=donor_spont, Death ~ donor_status + receiver, family = binomial, REML = F)
+
+m9 <- glmmTMB(data=donor_spont, Death ~ donor * donor_status, family = binomial, REML = F)
+m10 <- glmmTMB(data=donor_spont, Death ~ donor * receiver, family = binomial, REML = F)
+m11 <- glmmTMB(data=donor_spont, Death ~ donor_status * receiver, family = binomial, REML = F)
+
+m12 <- glmmTMB(data=donor_spont, Death ~ donor, family = binomial, REML = F)
+m13 <- glmmTMB(data=donor_spont, Death ~ donor_status, family = binomial, REML = F)
+m14 <- glmmTMB(data=donor_spont, Death ~ receiver, family = binomial, REML = F)
+
+m15 <- glmmTMB(data=donor_spont, Death ~ 1, family = binomial, REML = F)
+
+AICc(m1, m2, m3, m4, m5, m6, m7, m8, m9, m10, m11, m12, m13, m14, m15)
+```
+\
+The best model is the m10, tacking into account the donor line and the recipient line.
+\
+
+```{r, echo=F, results='hide'}
+simulateResiduals(m10, plot=T)
+```
+
+```{r, echo=FALSE}
+m10 <- glmmTMB(data=donor_spont, Death ~ donor * receiver, family = binomial, REML = T)
+tab_model(m10, show.intercept = F, show.r2 = F, show.re.var = F) 
+```
+
+\
+The Mt donor induces more mortality in the TV recipient than in the SpB recipient.
+
+## Data visualisation
+
+```{r, echo=F, warning=FALSE, results='hide'}
+donor_trans1<- donor_trans
+donor_spont1<- donor_spont
+donor_trans1$donor_status <- factor(donor_trans$donor_status,
+                                   levels = c("NT", "T"),
+                                   labels = c("Healthy donor","Tumorous donor"))
+
+donor_spont1$donor_status <- factor(donor_spont$donor_status,
+                                   levels = c("NT", "T"),
+                                   labels = c("Healthy donor","Tumorous donor"))
+
+Table_DT <- donor_trans1 %>% count(donor, donor_status, receiver, Death, sort = F)
+Table_DT <- cbind(Table_DT, pos = rep(c(0.9,0.1), 8))
+
+Table_DS <- donor_spont1 %>% count(donor, donor_status, receiver, Death, sort = F)
+Table_DS <- cbind(Table_DS, pos = c(rep(c(0.9,0.1), 5), 0.9, rep(c(0.9,0.1), 2)))
+
+a <- ggplot(donor_trans1, aes(x = receiver, fill = Death)) +
+  geom_bar(position = "fill")+
+  theme_classic()+
+  theme(legend.position="none")+
+  scale_x_discrete(labels = c("SpB", "Wild\ngroup\n"))+
+  scale_fill_manual(values=c("Grey", "black"))+
+  ylab("Death rate")+
+  xlab("Recipient")+
+  ylim (c(0, 1.2))+
+  ggtitle("Transmitted tumors\nDonor lineages\n")+
+  facet_grid(cols=vars(donor), rows = vars(donor_status))+
+  
+  theme(title = element_text(size = 15),
+        axis.title.y = element_text(size = 20),
+        axis.title.x = element_text(size = 20),
+        axis.text = element_text(size = 12),
+        strip.text.y = element_text(size = 16),
+        strip.text.x = element_text(size = 16))+
+  
+  geom_text(data = Table_DT,
+            aes(y = pos, x=receiver, fill= Death, label = n), 
+            color = "white", fontface = "bold", size=5)
+  
+
+b <- ggplot(donor_spont1, aes(x = receiver, fill = Death)) +
+  geom_bar(position = "fill")+
+  theme(legend.position="none")+
+  facet_grid(cols=vars(donor), rows = vars(donor_status))+
+  scale_x_discrete(labels = c("SpB", "Wild\ngroup\n"))+
+  scale_fill_manual(values=c("Grey", "black"))+
+  ylab("Death rate")+
+  xlab("Recipient")+
+  ylim (c(0, 1.2))+
+  ggtitle("Spontaneous tumors\nDonor lineages\n")+
+  theme_classic()+
+  
+  theme(title = element_text(size = 15),
+        axis.ticks = element_blank(),
+        axis.title.y = element_text(size = 20),
+        axis.title.x = element_text(size = 20),
+        axis.text = element_text(size = 12),
+        strip.text.y = element_text(size = 16),
+        strip.text.x = element_text(size = 16))+
+  
+  geom_text(data = Table_DS,
+            aes(y = pos, x=receiver, fill= Death, label = n), 
+            color = "white", fontface = "bold", size=5)
+a+b
+```
+

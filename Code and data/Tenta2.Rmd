@@ -1,0 +1,205 @@
+
+```{r , include=FALSE}
+library(readr)
+library(ggplot2)
+library(glmulti)
+library(ggpubr)
+library(ggstatsplot)
+library(lme4)
+library(DHARMa)
+library(sjPlot)
+library(svglite)
+library(glmmTMB)
+library(lme4)
+library(MuMIn)
+library(glmulti)
+library(MASS)
+library(ggridges)
+library(lmtest)
+library(dplyr)
+library(patchwork)
+library(survival)
+
+load("data_1.RData")
+load(file="DonorSpontaneous.RData")
+load(file="DonorTransmitted.RData")
+```
+
+# Analysis of the tentacules numbers of donor and recipient hydras
+
+## Comparisions between tumorous and non-tumorous of each donor lineages
+\
+We calculated the differences between tumors and non-tumors within each line using Wilcox tests.
+\
+```{r, echo=F, warning=FALSE}
+data_1$group <- as.factor(paste0(data_1$donor, data_1$donor_status))
+```
+
+```{r, echo=TRUE, warning=FALSE}
+wilcox.test(data_1$donor_tentacle[data_1$group=="RobNT"], data_1$donor_tentacle[data_1$group=="RobT"])
+
+wilcox.test(data_1$donor_tentacle[data_1$group=="SpBNT"], data_1$donor_tentacle[data_1$group=="SpBT"])
+wilcox.test(data_1$donor_tentacle[data_1$group=="SpBNT"], data_1$donor_tentacle[data_1$group=="SpB_spontT"])
+
+wilcox.test(data_1$donor_tentacle[data_1$group=="MTNT"], data_1$donor_tentacle[data_1$group=="MTT"])
+```
+
+### Graph of number of tentacles in donor lines
+
+```{r, echo=FALSE, warning=FALSE, results='hide', message=FALSE}
+
+data_1$group <- paste0(data_1$donor, data_1$donor_status)
+data_1$group <- recode_factor(data_1$group, 
+                              RobNT = "Rob\nControl",
+                              RobT = "Rob\nTransmitted\nTumors",
+                              
+                              SpBNT = "SpB\nControl", 
+                              SpBT = "SpB\nTransmitted\nTumors",
+                              SpB_spontT = "SpB\nSpontaneous\nTumors",
+                              
+                              MTNT = "MT\nControl",
+                              MTT = "MT\nSpontaneous\nTumors")
+
+p1 <- ggbetweenstats(
+  data = data_1,
+  x = group, ## grouping/independent variable
+  y = donor_tentacle, ## dependent variables
+  plot.type = "box", ## type of plot
+  pairwise.display = "none",
+  point.args = list(position = ggplot2::position_jitterdodge(dodge.width = 0.9), alpha =
+    0.4, size = 4, stroke = 0),
+  results.subtitle = F)+
+  scale_color_manual(values = c("chartreuse4","darkred",
+             "chartreuse4","darkred","darkred",
+             "chartreuse4","darkred"))
+p1+ggplot2::ylab("Number of tentacles")+
+  ggplot2::xlab("\nHydra group")
+```
+
+### Graph of number of tentacles in recipient lines
+
+```{r, warning=FALSE, echo=FALSE, message=FALSE}
+data_1$receiver <- recode_factor(data_1$receiver, 
+                              SpB = "SpB\nControl",
+                              TV = "Wild\nGroup")
+p2 <- ggbetweenstats(
+  data = data_1,
+  x = receiver, ## grouping/independent variable
+  y = receiver_tentacle, ## dependent variables
+  pairwise.comparisons = T,
+  plot.type = "box", ## type of plot
+  point.args = list(position = ggplot2::position_jitterdodge(dodge.width = 0.9), alpha =
+    0.4, size = 4, stroke = 0),
+  type = "np",
+  conf.level = 0.99,
+  results.subtitle = F,
+  centrality.label.args = list(size = 5, direction="both", nudge_y=17, segment.alpha = 0),
+  centrality.type = "nonparametric")
+
+p2+ggplot2::scale_color_manual(values = c("chartreuse4","chartreuse4"))+
+  ggplot2::ylab("Number of tentacles")+
+  ggplot2::xlab("\nHydra group")+
+  ggplot2::ylim(2,9)
+```
+
+# Analysis of the variation of the number of tentacles after grafting
+
+## Transmissible tumors dataset
+
+### Random effects selection
+
+```{r}
+donor_trans <- subset(donor_trans, donor_trans$diff_maxR!="NA")
+
+m1 <- glmmTMB(data=donor_trans, diff_maxR+2 ~ donor +donor_status + receiver + donor_tentacle + receiver_tentacle + (1|lot) + (1|date_draft), family = poisson, REML = T)
+m2 <- glmmTMB(data=donor_trans, diff_maxR+2 ~ donor +donor_status + receiver + donor_tentacle + receiver_tentacle + (1|date_draft/lot), family = poisson, REML = T)
+m3 <- glmmTMB(data=donor_trans, diff_maxR+2 ~ donor +donor_status + receiver + donor_tentacle + receiver_tentacle + (1|lot), family = poisson, REML = T)
+m4 <- glmmTMB(data=donor_trans, diff_maxR+2 ~ donor +donor_status + receiver + donor_tentacle + receiver_tentacle + (1|date_draft), family = poisson, REML = T)
+m5 <- glmmTMB(data=donor_trans, diff_maxR+2 ~ donor +donor_status + receiver + donor_tentacle + receiver_tentacle, family = poisson, REML = T)
+
+AICc(m1, m2, m3, m4, m5) 
+```
+\
+There is no need to include any of the potential random effects that have been measured.
+
+### Fixed effects selection
+\
+Given the number of potential effects to evaluate, we have opted for an automatic selection of fixed effects
+\
+
+```{R, warning=F}
+options(na.action = "na.omit")
+mT_trans_full = glmmTMB(data=donor_trans, diff_maxR+2 ~ donor * donor_status * receiver +  receiver_tentacle + donor_tentacle, family = poisson, REML = F)
+options(na.action = "na.fail")
+dd2 = dredge(mT_trans_full, rank = "AICc")
+```
+
+#### Table of the results of the best fitted models (lower AICc+2)
+
+```{r, echo=FALSE, warning=FALSE}
+tab_model(get.models(dd2, subset = delta < 2), show.intercept = F, show.r2 = F,show.re.var = F)
+#get.models(dd2, subset = delta < 2)
+options(na.action = "na.omit")
+```
+
+```{r, warning=FALSE}
+best_model_tentaTrans <- glmmTMB(data=donor_trans,diff_maxR+2 ~ donor_status + receiver_tentacle, family = poisson, REML = T)
+tab_model(best_model_tentaTrans, show.intercept = F, show.r2=F)
+```
+\
+
+On average, a individual who received a transplant of tumorous tissue developed 1.45 more tentacles compared to those who received healthy tissue and developed only one tentacle. Furthermore, individuals with a high number of tentacles prior to transplantation experienced a reduced increase in the number of tentacles after the procedure (IRR=0.83 [0.74 - 0.93], p=0.001), suggesting a possible threshold effect.
+
+```{r, warning=F, error=FALSE, results='hide'}
+simulateResiduals(best_model_tentaTrans, plot=T)
+```
+\
+The model is not perfectly balanced, however changing to another family such as negative binomial or zero-truncated does not significantly enhance the quality of the models or their outcomes.
+
+## Spontaneous tumors dataset
+
+### Random effects selection
+
+```{r}
+donor_spont <- subset(donor_spont, donor_spont$diff_maxR!="NA")
+
+m1 <- glmmTMB(data=donor_trans, diff_maxR+2 ~ donor + Tumors +donor_status + receiver + donor_tentacle + receiver_tentacle + (1|lot) + (1|date_draft), family = poisson, REML = T)
+m2 <- glmmTMB(data=donor_trans, diff_maxR+2 ~ donor + Tumors +donor_status + receiver + donor_tentacle + receiver_tentacle + (1|date_draft/lot), family = poisson, REML = T)
+m3 <- glmmTMB(data=donor_trans, diff_maxR+2 ~ donor + Tumors +donor_status + receiver + donor_tentacle + receiver_tentacle + (1|lot), family = poisson, REML = T)
+m4 <- glmmTMB(data=donor_trans, diff_maxR+2 ~ donor + Tumors +donor_status + receiver + donor_tentacle + receiver_tentacle + (1|date_draft), family = poisson, REML = T)
+m5 <- glmmTMB(data=donor_trans, diff_maxR+2 ~ donor + Tumors +donor_status + receiver + donor_tentacle + receiver_tentacle, family = poisson, REML = T)
+
+AICc(m1, m2, m3, m4, m5) 
+```
+\
+There is no need to include any of the potential random effects that have been measured.
+
+### Fixed effects selection
+
+\
+Given the number of potential effects to evaluate, we have opted for an automatic selection of fixed effects
+\
+
+```{R, warning=F}
+options(na.action = "na.omit")
+mT_spont_full = glmmTMB(data=donor_spont, diff_maxR+2 ~ donor * donor_status * receiver +  receiver_tentacle +donor_tentacle, family = poisson)
+options(na.action = "na.fail")
+dd = dredge(mT_spont_full, rank = "AICc")
+```
+
+#### Table of the results of the best fitted models (lower AICc+2)
+
+```{r, echo=FALSE}
+tab_model(get.models(dd, subset = delta < 2), show.intercept = F, show.r2 = F,show.re.var = F)
+#get.models(dd, subset = delta < 2)
+options(na.action = "na.omit")
+```
+
+```{r}
+best_model_tentaSpont <- glmmTMB(data=donor_spont,diff_maxR+2 ~ 1, family = poisson, REML = T)
+tab_model(best_model_tentaSpont, show.intercept = F, show.r2=F)
+```
+\
+
+None of the factors assessed had a notable effect on the variability of the tentacle count following transplantation within this group.
+

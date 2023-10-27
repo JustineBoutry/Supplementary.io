@@ -1,0 +1,30 @@
+
+# Software version and packages used
+
+```{r , echo=FALSE}
+devtools::session_info()
+
+print(citation(package="readr"), style = "text")
+print(citation(package="ggplot2"), style = "text")
+print(citation(package="glmulti"), style = "text")
+print(citation(package="ggpubr"), style = "text")
+print(citation(package="ggstatsplot"), style = "text")
+print(citation(package="lme4"), style = "text")
+print(citation(package="DHARMa"), style = "text")
+print(citation(package="sjPlot"), style = "text")
+print(citation(package="svglite"), style = "text")
+print(citation(package="glmmTMB"), style = "text")
+print(citation(package="lme4"), style = "text")
+print(citation(package="MuMIn"), style = "text")
+print(citation(package="glmulti"), style = "text")
+print(citation(package="MASS"), style = "text")
+print(citation(package="ggridges"), style = "text")
+print(citation(package="lmtest"), style = "text")
+print(citation(package="dplyr"), style = "text")
+print(citation(package="patchwork"), style = "text")
+print(citation(package="survival"), style = "text")
+print(citation(package="rsconnect"), style = "text")
+print(citation(package="rmarkdown"), style = "text")
+print(citation(package="bookdown"), style = "text")
+print(citation(package="devtools"), style = "text")
+```

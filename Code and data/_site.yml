@@ -1,0 +1,14 @@
+name: "supplementary-material-boutry2023"
+navbar:
+  title: "Supplementary material"
+  left:
+    - text: "1. Dataset presentation"
+      href: index.html
+    - text: "2. Mortality"
+      href: Morta1.html
+    - text: "3. Tumors development"
+      href: Tumor1.html
+    - text: "4. Tentacules numbers"
+      href: Tenta2.html
+    - text: "5. About"
+      href: Packa1.html      
