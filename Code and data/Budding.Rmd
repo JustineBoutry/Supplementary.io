@@ -30,192 +30,343 @@ load(file="DonorTransmitted.RData")
 knitr::opts_chunk$set(tidy.opts=list(width.cutoff=80), tidy=TRUE)
 ```
 
-# Analysis of the tumors development after grafting
+# Model analysis of the parameters influencing the number of buds produced during the study 
 
 ## Transmissible tumors dataset
 
-### Random effects selection
+### Global model selection
 
 ```{r}
-m1 <- glmmTMB(data=donor_trans, Tumors ~ donor * donor_status + receiver + (1|lot) + (1|date_draft), family = binomial, REML = T)
-m2 <- glmmTMB(data=donor_trans, Tumors ~ donor * donor_status + receiver + (1|date_draft/lot), family = binomial, REML = T)
-m3 <- glmmTMB(data=donor_trans, Tumors ~ donor * donor_status + receiver + (1|lot), family = binomial, REML = T)
-m4 <- glmmTMB(data=donor_trans, Tumors ~ donor * donor_status + receiver + (1|date_draft), family = binomial, REML = T)
-m5 <- glmmTMB(data=donor_trans, Tumors ~ donor * donor_status + receiver, family = binomial, REML = T)
+donor_transN <- subset(donor_trans, donor_trans$abnormalities=="Normal")
 
-AICc(m1, m2, m3, m4, m5) 
+models<- glmulti(buds_10~donor*donor_status*receiver*diff_maxR*Tumors, 
+                 data=donor_transN, 
+                 level = 2, method = 'h', crit='aicc',fitfunction = 'lm')
+
+tmp <- weightable(models)
+tmp2 <- tmp[tmp$aicc <= min(tmp$aicc) + 2,]
+tmp2
+
+best_rt1 <- lm(buds_10 ~ 1 + donor + donor_status + receiver + Tumors + diff_maxR + 
+                 receiver:donor_status + Tumors:receiver + Tumors:diff_maxR, 
+               data=donor_transN)
+
+best_rt2 <- lm(buds_10 ~ 1 + donor + donor_status + receiver + Tumors + diff_maxR + 
+                 receiver:donor_status + Tumors:donor_status + Tumors:receiver, 
+               data=donor_transN)
+
+best_rt3 <- lm(buds_10 ~ 1 + donor + donor_status + receiver + Tumors + diff_maxR + 
+                 receiver:donor_status + Tumors:donor_status + Tumors:receiver + Tumors:diff_maxR, 
+               data=donor_transN)
+
+best_rt4 <- lm(buds_10 ~ 1 + donor + donor_status + receiver + Tumors + diff_maxR + 
+                 donor_status:donor + receiver:donor_status + Tumors:receiver + Tumors:diff_maxR, 
+               data=donor_transN)
+
+best_rt5 <- lm(buds_10 ~ 1 + donor + donor_status + receiver + Tumors + diff_maxR + 
+                 receiver:donor_status + Tumors:receiver, 
+               data=donor_transN)
+
+best_rt6 <- lm(buds_10 ~ 1 + donor + donor_status + receiver + Tumors + diff_maxR + 
+                 receiver:donor_status + Tumors:donor_status + Tumors:receiver + donor:diff_maxR, 
+               data=donor_transN)
+
+tab_model(best_rt1,best_rt2,best_rt3,best_rt4,best_rt5,best_rt6, show.intercept = F)
+
+simulateResiduals(best_rt5, plot=T)
 ```
-\
-There is no need to include any of the potential random effects that have been measured.
 
-### Fixed effects selection
+\
+It seems than the appearance of tumors in certain receiver, and the interaction of recipient and donor status are the factor influencing the most the number of buds produced.
+\
+However the number of tentacles seems also to play a role than cannont be ruled out. In order to refocus the analysis on the parameters of our interest, we will create groups of donor and recipient, in the purpose of analyzing the general relationship between tentacles number and budding at the intra-group level.
+
+### Intra-group analysis
 
 ```{r}
-m1 <- glmmTMB(data=donor_trans, Tumors ~ donor * donor_status * receiver, family = binomial, REML = F)
-m2 <- glmmTMB(data=donor_trans, Tumors ~ donor * donor_status + receiver, family = binomial, REML = F)
-m3 <- glmmTMB(data=donor_trans, Tumors ~ donor + donor_status * receiver, family = binomial, REML = F)
-m4 <- glmmTMB(data=donor_trans, Tumors ~ donor * receiver + donor_status, family = binomial, REML = F)
+donor_transN$groupDR <- paste0(donor_transN$donor, donor_transN$donor_status, donor_transN$receiver)
 
-m5 <- glmmTMB(data=donor_trans, Tumors ~ donor + donor_status + receiver, family = binomial, REML = F)
-m6 <- glmmTMB(data=donor_trans, Tumors ~ donor + donor_status, family = binomial, REML = F)
-m7 <- glmmTMB(data=donor_trans, Tumors ~ donor + receiver, family = binomial, REML = F)
-m8 <- glmmTMB(data=donor_trans, Tumors ~ donor_status + receiver, family = binomial, REML = F)
+best_rt10.4 <- lmer(buds_10 ~ 1 + diff_maxR * Tumors + (1|groupDR), 
+                    data=donor_transN)
+best_rt10.3 <- lmer(buds_10 ~ 1 + diff_maxR + Tumors + (1|groupDR), 
+                    data=donor_transN)
+best_rt10.2 <- lmer(buds_10 ~ 1 + diff_maxR + (1|groupDR), 
+                    data=donor_transN)
+best_rt10.1 <- lmer(buds_10 ~ 1 + Tumors + (1|groupDR), 
+                    data=donor_transN)
+best_rt10.0 <- lmer(buds_10 ~ 1 + (1|groupDR), 
+                    data=donor_transN)
 
-m9 <- glmmTMB(data=donor_trans, Tumors ~ donor * donor_status, family = binomial, REML = F)
-m10 <- glmmTMB(data=donor_trans, Tumors ~ donor * receiver, family = binomial, REML = F)
-m11 <- glmmTMB(data=donor_trans, Tumors ~ donor_status * receiver, family = binomial, REML = F)
-
-m12 <- glmmTMB(data=donor_trans, Tumors ~ donor, family = binomial, REML = F)
-m13 <- glmmTMB(data=donor_trans, Tumors ~ donor_status, family = binomial, REML = F)
-m14 <- glmmTMB(data=donor_trans, Tumors ~ receiver, family = binomial, REML = F)
-
-m15 <- glmmTMB(data=donor_trans, Tumors ~ 1, family = binomial, REML = F)
-
-AICc(m1, m2, m3, m4, m5, m6, m7, m8, m9, m10, m11, m12, m13, m14, m15)
+AICc(best_rt10.4, best_rt10.3,best_rt10.2, best_rt10.1, best_rt10.0)
 ```
 \
 
 #### Table of the results of the best fitted models (lower AICc+2)
 
 ```{r, echo = F}
-tab_model(m9, m6,show.intercept = F, show.r2 = F,show.re.var = F)
+
+tab_model(best_rt10.4, best_rt10.3,best_rt10.2, best_rt10.1, best_rt10.0, show.intercept = F)
 ```
 
 ```{r, warning=F, error=FALSE, results='hide'}
-simulateResiduals(m9, plot=T)
+simulateResiduals(best_rt10.4, plot=T)
 ```
 \
 Final model results:
 
 ```{r}
-m9 <- glmmTMB(data=donor_trans, Tumors ~ donor * donor_status, family = binomial, REML = T)
-tab_model(m9, show.intercept = F, show.r2 = F,show.re.var = F)
+tab_model(best_rt10.4, show.intercept = F)
 ```
 
-There is an slightly significant effect of the status of the donor, with individuals grafted with Robusta tissues developing less tumors than healthy one.
-And a strong effect of the donor status, with 10,4 % (IRR of 9,62) more chances to develop tumors when the giver hydra is tumorous.
-Maybe a small interaction but not enough power to be sure.
+If we look at the intra group level, the number of supernumerary tentacles and the presence of tumors interact in a significant way to explain the budding rate.
+\
 
+### When does this relationship establish ?
+
+```{r}
+best_rt10 <- lmer(buds_10 ~ 1 + tenta_10 * Tumors + (1|groupDR), 
+                  data=donor_transN)
+best_rt9 <- lmer(buds_9 ~ 1 + tenta_9 * Tumors + (1|groupDR), 
+                 data=donor_transN)
+best_rt8 <- lmer(buds_8 ~ 1 + tenta_8 * Tumors + (1|groupDR), 
+                 data=donor_transN)
+best_rt7 <- lmer(buds_7 ~ 1 + tenta_7 * Tumors + (1|groupDR), 
+                 data=donor_transN)
+best_rt6 <- lmer(buds_6 ~ 1 + tenta_6 * Tumors + (1|groupDR), 
+                 data=donor_transN)
+best_rt5 <- lmer(buds_5 ~ 1 + tenta_5 * Tumors + (1|groupDR), 
+                 data=donor_transN)
+best_rt4 <- lmer(buds_4 ~ 1 + tenta_4 * Tumors+ (1|groupDR), 
+                 data=donor_transN)
+best_rt3 <- lmer(buds_3 ~ 1 + tenta_3 * Tumors + (1|groupDR), 
+                 data=donor_transN)
+best_rt2 <- lmer(buds_2 ~ 1 + tenta_2 * Tumors + (1|groupDR), 
+                 data=donor_transN)
+best_rt1 <- lmer(buds_1 ~ 1 + tenta_1 * Tumors + (1|groupDR), 
+                 data=donor_transN)
+tab_model(best_rt10,best_rt9,best_rt8,best_rt7,best_rt6,best_rt5,best_rt4,best_rt3,best_rt2,best_rt1, show.intercept = F)
+```
+
+\
+The relationship between the number of tentacles, the tumor presence and the budding seems to appear only after the third week, which correspond to the establishment of the tumorous phenotype and the increase in the number of tentacles.
+\
 ## Spontaneaous tumors dataset
 
-### Random effects selection
+### Global model
 
 ```{r}
-m1 <- glmmTMB(data=donor_spont, Tumors ~ donor + receiver + donor_status + (1|lot) + (1|date_draft), family = binomial, REML = T)
-m2 <- glmmTMB(data=donor_spont, Tumors ~ donor + donor_status + receiver + (1|date_draft/lot), family = binomial, REML = T)
-m3 <- glmmTMB(data=donor_spont, Tumors ~ donor + donor_status + receiver + (1|lot), family = binomial, REML = T)
-m4 <- glmmTMB(data=donor_spont, Tumors ~ donor + donor_status + receiver + (1|date_draft), family = binomial, REML = T)
-m5 <- glmmTMB(data=donor_spont, Tumors ~ donor + donor_status + receiver, family = binomial, REML = T)
+donor_spontN <- subset(donor_spont, donor_spont$abnormalities=="Normal")
 
-AICc(m1, m2, m3, m4, m5) 
+models<- glmulti(buds_10~donor*donor_status*receiver*diff_maxR*Tumors, 
+                 data=donor_spontN, 
+                 level = 2, method = 'h', crit='aicc',fitfunction = 'lm')
+
+tmp <- weightable(models)
+tmp2 <- tmp[tmp$aicc <= min(tmp$aicc) + 2,]
+tmp2
+
+best_rt1 <- lm(buds_10 ~ 1 + donor + receiver + Tumors + diff_maxR + 
+                 receiver:donor + Tumors:donor + donor_status:diff_maxR, 
+                     data=donor_spontN)
+
+best_rt2 <- lm(buds_10 ~ 1 + donor + receiver + Tumors + diff_maxR + 
+                 receiver:donor + Tumors:donor + donor_status:diff_maxR + 
+                 receiver:diff_maxR, 
+              data=donor_spontN)
+
+best_rt3 <- lm(buds_10 ~ 1 + donor + receiver + diff_maxR + 
+                 receiver:donor + donor:diff_maxR + donor_status:diff_maxR,
+              data=donor_spontN)
+
+best_rt4 <- lm(buds_10 ~ 1 + donor + donor_status + receiver + Tumors + diff_maxR + 
+                 receiver:donor + Tumors:donor + donor_status:diff_maxR,
+              data=donor_spontN)
+
+best_rt5 <- lm(buds_10 ~ 1 + donor + donor_status + receiver + diff_maxR + 
+                 receiver:donor + donor:diff_maxR + donor_status:diff_maxR, 
+              data=donor_spontN)
+
+best_rt6 <- lm(buds_10 ~ 1 + donor + receiver + Tumors + diff_maxR + 
+                 receiver:donor + Tumors:donor + donor_status:diff_maxR + Tumors:diff_maxR, 
+              data=donor_spontN)
+
+best_rt7 <- lm(buds_10 ~ 1 + donor + receiver + Tumors + diff_maxR + 
+                 receiver:donor + Tumors:donor + donor_status:diff_maxR + Tumors:diff_maxR, 
+               data=donor_spontN)
+
+best_rt8 <- lm(buds_10 ~ 1 + donor + donor_status + receiver + Tumors + diff_maxR + 
+                 donor_status:donor + receiver:donor + Tumors:donor + donor_status:diff_maxR, 
+               data=donor_spontN)
+best_rt9 <- lm(buds_10 ~ 1 + donor + receiver + Tumors + diff_maxR + 
+                 receiver:donor + Tumors:donor + donor:diff_maxR + donor_status:diff_maxR, 
+               data=donor_spontN)
+
+tab_model(best_rt1,best_rt2,best_rt3,best_rt4,best_rt5,best_rt6,best_rt7,best_rt8,best_rt9, show.intercept = F)
+
+simulateResiduals(best_rt5, plot=T)
 ```
 \
-There is no need to include any of the potential random effects that have been measured.
+It seems than the appearance of tumors in certain donor, and the interaction of recipient and donor are the factor influencing the most the number of buds, the number of tentacles seems also to play a role when the donor was tumorous. In order to refocus the analysis on the parameters of our interest, we will create groups of donor and recipient.
 
-### Fixed effects selection
+### Intra group analysis
 
 ```{r}
-m1 <- glmmTMB(data=donor_spont, Tumors ~ donor * donor_status * receiver, family = binomial, REML = F)
-m2 <- glmmTMB(data=donor_spont, Tumors ~ donor * donor_status + receiver, family = binomial, REML = F)
-m3 <- glmmTMB(data=donor_spont, Tumors ~ donor * receiver + donor_status, family = binomial, REML = F)
-m4 <- glmmTMB(data=donor_spont, Tumors ~ donor + receiver * donor_status, family = binomial, REML = F)
+best_rt10.4 <- lmer(buds_10 ~ 1 + diff_maxR * Tumors + (1|groupDR), 
+                  data=donor_spontN)
+best_rt10.3 <- lmer(buds_10 ~ 1 + diff_maxR + Tumors + (1|groupDR), 
+                  data=donor_spontN)
+best_rt10.2 <- lmer(buds_10 ~ 1 + diff_maxR + (1|groupDR), 
+                  data=donor_spontN)
+best_rt10.1 <- lmer(buds_10 ~ 1 + Tumors + (1|groupDR), 
+                  data=donor_spontN)
+best_rt10.0 <- lmer(buds_10 ~ 1 + (1|groupDR), 
+                    data=donor_spontN)
 
-m5 <- glmmTMB(data=donor_spont, Tumors ~ donor + donor_status + receiver, family = binomial, REML = F)
+AICc(best_rt10.4, best_rt10.3,best_rt10.2, best_rt10.1, best_rt10.0)
 
-m6 <- glmmTMB(data=donor_spont, Tumors ~ donor + donor_status, family = binomial, REML = F)
-m7 <- glmmTMB(data=donor_spont, Tumors ~ donor + receiver, family = binomial, REML = F)
-m8 <- glmmTMB(data=donor_spont, Tumors ~ donor_status + receiver, family = binomial, REML = F)
-
-m9 <- glmmTMB(data=donor_spont, Tumors ~ donor * donor_status, family = binomial, REML = F)
-m10 <- glmmTMB(data=donor_spont, Tumors ~ donor * receiver, family = binomial, REML = F)
-m11 <- glmmTMB(data=donor_spont, Tumors ~ donor_status * receiver, family = binomial, REML = F)
-
-m12 <- glmmTMB(data=donor_spont, Tumors ~ donor, family = binomial, REML = F)
-m13 <- glmmTMB(data=donor_spont, Tumors ~ donor_status, family = binomial, REML = F)
-m14 <- glmmTMB(data=donor_spont, Tumors ~ receiver, family = binomial, REML = F)
-
-m15 <- glmmTMB(data=donor_spont, Tumors ~ 1, family = binomial, REML = F)
-
-AICc(m1, m2, m3, m4, m5, m6, m7, m8, m9, m10, m11, m12, m13, m14, m15)
 ```
 
 #### Table of the results of the best fitted models (lower AICc+2)
 
 ```{r, echo = F}
-tab_model(m8, m13, m3, m4, m6, show.intercept = F, show.r2 = F,show.re.var = F) 
-````
-
-```{r, results='hide', echo=FALSE}
-simulateResiduals(m8, plot=T)
-````
-
-```{r}
-m13 <- glmmTMB(data=donor_spont, Tumors ~ donor_status, family = binomial, REML = T)
-tab_model(m13, show.intercept = F, show.r2 = F,show.re.var = F) 
+tab_model(best_rt10.4, best_rt10.3,best_rt10.2, best_rt10.1, best_rt10.0, show.intercept = F)
 ```
 
-There is a small but significant effect of the status of the donor, the tumorous donors triggers twice and half more tumors in there grafted host.
+```{r, results='hide', echo=FALSE}
+simulateResiduals(best_rt10.4, plot=T)
+```
+
+```{r}
+tab_model(best_rt10.4, show.intercept = F)
+```
+
+If we look at the intra group level, there is no clear relationship. Which is quite expected given the absence of increased number of tentacles when the donor was a spontaneous tumors.
+
+### When does this relationship establish ?
+
+```{r}
+best_rt10 <- lmer(buds_10 ~ 1 + tenta_10 * Tumors + (1|groupDR), 
+                 data=donor_spontN)
+best_rt9 <- lmer(buds_9 ~ 1 + tenta_9 * Tumors + (1|groupDR), 
+                 data=donor_spontN)
+best_rt8 <- lmer(buds_8 ~ 1 + tenta_8 * Tumors + (1|groupDR), 
+                 data=donor_spontN)
+best_rt7 <- lmer(buds_7 ~ 1 + tenta_7 * Tumors + (1|groupDR), 
+                 data=donor_spontN)
+best_rt6 <- lmer(buds_6 ~ 1 + tenta_6 * Tumors + (1|groupDR), 
+                 data=donor_spontN)
+best_rt5 <- lmer(buds_5 ~ 1 + tenta_5 * Tumors + (1|groupDR), 
+                 data=donor_spontN)
+best_rt4 <- lmer(buds_4 ~ 1 + tenta_4 * Tumors+ (1|groupDR), 
+                 data=donor_spontN)
+best_rt3 <- lmer(buds_3 ~ 1 + tenta_3 * Tumors + (1|groupDR), 
+                 data=donor_spontN)
+best_rt2 <- lmer(buds_2 ~ 1 + tenta_2 * Tumors + (1|groupDR), 
+                 data=donor_spontN)
+best_rt1 <- lmer(buds_1 ~ 1 + tenta_1 * Tumors + (1|groupDR), 
+                 data=donor_spontN)
+
+tab_model(best_rt10,best_rt9,best_rt8,best_rt7,best_rt6,best_rt5,best_rt4,best_rt3,best_rt2,best_rt1, show.intercept = F)
+```
+
+This is coherent, no relationship because of not enough variations.
+
+## Global dataset, spontaneous and transmissible tumors together
+
+### Intra group analysis
+
+```{r}
+data_1$groupDR <- as.factor(paste0(data_1$donor, data_1$donor_status, data_1$recipient))
+summary(data_1$groupDR)
+data_1N <- subset(data_1, data_1$abnormalities=="Normal")
+
+best_rt10.4 <- lmer(buds_10 ~ 1 + diff_maxR * Tumors + (1|groupDR), 
+                    data=donor_transN)
+best_rt10.3 <- lmer(buds_10 ~ 1 + diff_maxR + Tumors + (1|groupDR), 
+                    data=donor_transN)
+best_rt10.2 <- lmer(buds_10 ~ 1 + diff_maxR + (1|groupDR), 
+                    data=donor_transN)
+best_rt10.1 <- lmer(buds_10 ~ 1 + Tumors + (1|groupDR), 
+                    data=donor_transN)
+best_rt10.0 <- lmer(buds_10 ~ 1 + Tumors + (1|groupDR), 
+                    data=donor_transN)
+
+AICc(best_rt10.4, best_rt10.3,best_rt10.2, best_rt10.1, best_rt10.0)
+```
+
+#### Table of the results of the best fitted models (lower AICc+2)
+
+```{r, echo=FALSE}
+tab_model(best_rt10.4, best_rt10.3,best_rt10.2, best_rt10.1, best_rt10.0, show.intercept = F)
+```
+
+The combination of increased number of tentacles and tumor presence explains a significant part of the budding rate experienced intra group.
+
+```{r, results='hide', echo=FALSE}
+simulateResiduals(best_rt10.4, plot=T)
+```
+
+### When does this relationship establish ?
+
+```{r, echo=FALSE}
+best_rt10 <- lmer(buds_10 ~ 1 + tenta_10 * Tumors + (1|groupDR), 
+                  data=data_1N)
+best_rt9 <- lmer(buds_9 ~ 1 + tenta_9 * Tumors+ (1|groupDR), 
+                 data=data_1N)
+best_rt8 <- lmer(buds_8 ~ 1 + tenta_8 * Tumors+ (1|groupDR), 
+                 data=data_1N)
+best_rt7 <- lmer(buds_7 ~ 1 + tenta_7 * Tumors+ (1|groupDR), 
+                 data=data_1N)
+best_rt6 <- lmer(buds_6 ~ 1 + tenta_6 * Tumors+ (1|groupDR), 
+                 data=data_1N)
+best_rt5 <- lmer(buds_5 ~ 1 + tenta_5 * Tumors+ (1|groupDR), 
+                 data=data_1N)
+best_rt4 <- lmer(buds_4 ~ 1 + tenta_4 * Tumors+ (1|groupDR), 
+                 data=data_1N)
+best_rt3 <- lmer(buds_3 ~ 1 + tenta_3 * Tumors+ (1|groupDR), 
+                 data=data_1N)
+best_rt2 <- lmer(buds_2 ~ 1 + tenta_2 * Tumors+ (1|groupDR), 
+                 data=data_1N)
+best_rt1 <- lmer(buds_1 ~ 1 + tenta_1 * Tumors+ (1|groupDR), 
+                 data=data_1N)
+
+tab_model(best_rt10,best_rt9,best_rt8,best_rt7,best_rt6,best_rt5,best_rt4,best_rt3,best_rt2,best_rt1, 
+          show.intercept = F)
+simulateResiduals(best_rt10, plot=T)
+```
+
+Again very coherent results, the relationship starts when the tumorous phenotype, including supernumerary tentacles is expressed.
+
+```{r, echo=FALSE}
+best_rt10.1 <- lmer(buds_10 ~ 1 + tenta_10 * Tumors + (1|groupDR), 
+                  data=data_1N)
+best_rt10.2 <- lmer(buds_10 ~ 1 + tenta_10 + Tumors + (1|groupDR), 
+                  data=data_1N)
+best_rt10.3 <- lmer(buds_10 ~ 1 + tenta_10  + (1|groupDR), 
+                  data=data_1N)
+best_rt10.4 <- lmer(buds_10 ~ 1 + Tumors  + (1|groupDR), 
+                  data=data_1N)
+best_rt10.5 <- lmer(buds_10 ~ 1 + 0  + (1|groupDR), 
+                  data=data_1N)
+AICc(best_rt10.1 , best_rt10.2, best_rt10.3, best_rt10.4, best_rt10.5)
+
+tab_model(best_rt10.1, best_rt10.4,
+          show.intercept = F)
+```
+
+The relationship between direct number of tentcales at the week 10 and budding rate is even stronger, however we prefer to keep consistent indicator into the final analysis.
 
 ## Data visualisation
 
 ```{r, echo = FALSE, warning=FALSE}
-donor_trans$donor_status <- factor(donor_trans$donor_status,
-                                   levels = c("NT", "T"),
-                                   labels = c("Healthy donor","Tumorous donor"))
-
-donor_spont$donor_status <- factor(donor_spont$donor_status,
-                                   levels = c("NT", "T"),
-                                   labels = c("Healthy donor","Tumorous donor"))
-
-Table_DT <- donor_trans %>% count(donor, donor_status, receiver, Tumors, sort = F)
-Table_DT <- cbind(Table_DT, pos = rep(c(0.90,0.1), 8))
-
-Table_DS <- donor_spont %>% count(donor, donor_status, receiver, Tumors, sort = F)
-Table_DS <- cbind(Table_DS, pos = rep(c(0.90,0.1), 8))
-
-a <- ggplot(donor_trans, aes(x = receiver, fill = Tumors)) +
-  geom_bar(position = "fill",alpha=0.8)+
-  facet_grid(cols=vars(donor), rows = vars(donor_status))+
-  scale_x_discrete(labels = c("SpB", "Wild\ngroup\n"))+
-  scale_fill_manual(values=c("seagreen3", "#DC143C"))+
-  ylab("Tumor development rate")+
-  xlab("Recipient")+
-  ylim(c(0, 1.2))+
-  ggtitle("Transmitted tumors\nDonor lineages\n")+
-  theme_classic()+
-  theme(legend.position="none")+
-  theme(title = element_text(size = 15),
-        axis.title.y = element_text(size = 20),
-        axis.title.x = element_text(size = 20),
-        axis.text = element_text(size = 12),
-        strip.text.y = element_text(size = 16),
-        strip.text.x = element_text(size = 16))+
-  
-  geom_text(data = Table_DT,
-            aes(y = pos, x=receiver, fill= Tumors, label = n), 
-            color = "white", fontface = "bold", size= 5)
-
-b <- ggplot(donor_spont, aes(x = receiver, fill = Tumors)) +
-  geom_bar(position = "fill",alpha=0.8)+
-  facet_grid(cols=vars(donor), rows = vars(donor_status))+
-  scale_x_discrete(labels = c("SpB", "Wild\ngroup\n"))+
-  scale_fill_manual(values=c("seagreen3", "#DC143C"))+
-  ylab("Tumor development rate")+
-  xlab("Recipient")+
-  ggtitle("Spontaneous tumors\nDonor lineages\n")+
-  ylim (c(0, 1.2))+
-  theme_classic()+
-  
-  theme(title = element_text(size = 15),
-        axis.title.y = element_text(size = 20),
-        axis.title.x = element_text(size = 20),
-        axis.text = element_text(size = 12),
-        strip.text.y = element_text(size = 16),
-        strip.text.x = element_text(size = 16))+
-  
-  geom_text(data = Table_DS,
-            aes(y = pos, x=receiver, fill= Tumors, label = n),
-            color = "white", fontface = "bold", size= 5)
-
-a+b
+ggplot(data = data_1N, aes(x = diff_maxR, y = buds_10, color = Tumors)) +
+  geom_point(size = 3, alpha = 0.7, position = "jitter") +  # Ajuster la taille et la transparence des points
+  geom_smooth(method = "lm", se = T) + # Ajuster la régression linéaire+ 
+  theme_minimal() +  # Choisir un thème minimal
+  labs(title = "",
+       x = "Number of supernumerary tentacles",
+       y = "Number of buds produced (ten weeks)") +  # Ajouter des étiquettes d'axes
+  scale_color_manual(values = c("Chartreuse4", "darkred")) +  # Changer les couleurs manuellement
+  theme(legend.position = "top")+
+  scale_x_continuous(breaks = seq(-1, 9, by = 2))
 ```
