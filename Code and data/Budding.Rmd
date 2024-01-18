@@ -31,7 +31,7 @@ load(file="DonorTransmitted.RData")
 knitr::opts_chunk$set(tidy.opts=list(width.cutoff=80), tidy=TRUE)
 ```
 
-# Model analysis of the parameters influencing the number of buds produced during the study 
+# Analysis of Parameters Influencing the Number of Buds Produced during the Study
 
 ## Transmissible tumors dataset
 
@@ -73,14 +73,11 @@ best_rt6 <- lm(buds_10 ~ 1 + donor + donor_status + receiver + Tumors + diff_max
                data=donor_transN)
 
 tab_model(best_rt1,best_rt2,best_rt3,best_rt4,best_rt5,best_rt6, show.intercept = F)
-
-simulateResiduals(best_rt5, plot=T)
 ```
 
 \
-It seems than the appearance of tumors in certain receiver, and the interaction of recipient and donor status are the factor influencing the most the number of buds produced.
+It appears that the appearance of tumors in certain receivers and the interaction of recipient and donor status are the factors influencing the most the number of buds produced. However, the number of tentacles also seems to play a role that cannot be ruled out. To focus the analysis on our parameters of interest, we will create groups of donors and recipients to analyze the general relationship between tentacle number and budding at the intra-group level.
 \
-However the number of tentacles seems also to play a role than cannont be ruled out. In order to refocus the analysis on the parameters of our interest, we will create groups of donor and recipient, in the purpose of analyzing the general relationship between tentacles number and budding at the intra-group level.
 
 ### Intra-group analysis
 
@@ -119,7 +116,8 @@ Final model results:
 tab_model(best_rt10.4, show.intercept = F)
 ```
 
-If we look at the intra group level, the number of supernumerary tentacles and the presence of tumors interact in a significant way to explain the budding rate.
+\
+If we look at the intra-group level, the number of supernumerary tentacles and the presence of tumors interact significantly to explain the budding rate.
 \
 
 ### When does this relationship establish ?
@@ -149,13 +147,14 @@ tab_model(best_rt10,best_rt9,best_rt8,best_rt7,best_rt6,best_rt5,best_rt4,best_r
 ```
 
 \
-The relationship between the number of tentacles, the tumor presence and the budding seems to appear only after the third week, which correspond to the establishment of the tumorous phenotype and the increase in the number of tentacles.
+The relationship between the number of tentacles, the tumor presence, and the budding seems to appear only after the third week, corresponding to the establishment of the tumorous phenotype and the increase in the number of tentacles.
 \
+
 ## Spontaneaous tumors dataset
 
-### Global model
+### Global model selection
 
-```{r}
+```{r, message=FALSE, results='hide'}
 donor_spontN <- subset(donor_spont, donor_spont$abnormalities=="Normal")
 
 models<- glmulti(buds_10~donor*donor_status*receiver*diff_maxR*Tumors, 
@@ -203,11 +202,11 @@ best_rt9 <- lm(buds_10 ~ 1 + donor + receiver + Tumors + diff_maxR +
                data=donor_spontN)
 
 tab_model(best_rt1,best_rt2,best_rt3,best_rt4,best_rt5,best_rt6,best_rt7,best_rt8,best_rt9, show.intercept = F)
-
-simulateResiduals(best_rt5, plot=T)
 ```
+
 \
-It seems than the appearance of tumors in certain donor, and the interaction of recipient and donor are the factor influencing the most the number of buds, the number of tentacles seems also to play a role when the donor was tumorous. In order to refocus the analysis on the parameters of our interest, we will create groups of donor and recipient.
+It seems that the appearance of tumors in certain donors and the interaction of recipient and donor are the factors influencing the most the number of buds. The number of tentacles also seems to play a role when the donor was tumorous. To focus the analysis on the parameters of interest, we will create groups of donors and recipients.
+\
 
 ### Intra group analysis
 
@@ -244,9 +243,12 @@ simulateResiduals(best_rt10.4, plot=T)
 tab_model(best_rt10.4, show.intercept = F)
 ```
 
-If we look at the intra group level, there is no clear relationship. Which is quite expected given the absence of increased number of tentacles when the donor was a spontaneous tumors.
+\
+If we look at the intra-group level, there is no clear relationship, which is quite expected given the absence of an increased number of tentacles when the donor was a spontaneous tumor.
+\
 
 ### When does this relationship establish ?
+\
 
 ```{r}
 best_rt10 <- lmer(buds_10 ~ 1 + tenta_10 * Tumors + (1|groupDR), 
@@ -273,9 +275,11 @@ best_rt1 <- lmer(buds_1 ~ 1 + tenta_1 * Tumors + (1|groupDR),
 tab_model(best_rt10,best_rt9,best_rt8,best_rt7,best_rt6,best_rt5,best_rt4,best_rt3,best_rt2,best_rt1, show.intercept = F)
 ```
 
-This is coherent, no relationship because of not enough variations.
+\
+This is coherent; no relationship is observed due to not enough variations.
+\
 
-## Global dataset, spontaneous and transmissible tumors together
+## Global Dataset: Spontaneous and Transmissible Tumors Together
 
 ### Intra group analysis
 
@@ -304,7 +308,9 @@ AICc(best_rt10.4, best_rt10.3,best_rt10.2, best_rt10.1, best_rt10.0)
 tab_model(best_rt10.4, best_rt10.3,best_rt10.2, best_rt10.1, best_rt10.0, show.intercept = F)
 ```
 
-The combination of increased number of tentacles and tumor presence explains a significant part of the budding rate experienced intra group.
+\
+The combination of increased number of tentacles and tumor presence explains a significant part of the budding rate experienced intra-group.
+\
 
 ```{r, results='hide', echo=FALSE}
 simulateResiduals(best_rt10.4, plot=T)
@@ -336,10 +342,11 @@ best_rt1 <- lmer(buds_1 ~ 1 + tenta_1 * Tumors+ (1|groupDR),
 
 tab_model(best_rt10,best_rt9,best_rt8,best_rt7,best_rt6,best_rt5,best_rt4,best_rt3,best_rt2,best_rt1, 
           show.intercept = F)
-simulateResiduals(best_rt10, plot=T)
 ```
 
-Again very coherent results, the relationship starts when the tumorous phenotype, including supernumerary tentacles is expressed.
+\
+Again, very coherent results; the relationship starts when the tumorous phenotype, including supernumerary tentacles, is expressed.
+\
 
 ```{r, echo=FALSE}
 best_rt10.1 <- lmer(buds_10 ~ 1 + tenta_10 * Tumors + (1|groupDR), 
@@ -358,7 +365,9 @@ tab_model(best_rt10.1, best_rt10.4,
           show.intercept = F)
 ```
 
-The relationship between direct number of tentcales at the week 10 and budding rate is even stronger, however we prefer to keep consistent indicator into the final analysis.
+\
+The relationship between the direct number of tentacles at week 10 and budding rate is even stronger; however, we prefer to keep a consistent indicator in the final analysis.
+\
 
 ## Data visualisation
 
