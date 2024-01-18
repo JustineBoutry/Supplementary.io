@@ -19,6 +19,7 @@ library(lmtest)
 library(dplyr)
 library(patchwork)
 library(survival)
+library(formatR)
 
 load("data_1.RData")
 load(file="DonorSpontaneous.RData")
@@ -36,12 +37,12 @@ knitr::opts_chunk$set(tidy.opts=list(width.cutoff=80), tidy=TRUE)
 
 ### Global model selection
 
-```{r}
+```{r, results='hide'}
 donor_transN <- subset(donor_trans, donor_trans$abnormalities=="Normal")
 
 models<- glmulti(buds_10~donor*donor_status*receiver*diff_maxR*Tumors, 
                  data=donor_transN, 
-                 level = 2, method = 'h', crit='aicc',fitfunction = 'lm')
+                 level = 2, method = 'h', crit='aicc',fitfunction = 'lm', pl = FALSE)
 
 tmp <- weightable(models)
 tmp2 <- tmp[tmp$aicc <= min(tmp$aicc) + 2,]
@@ -159,7 +160,7 @@ donor_spontN <- subset(donor_spont, donor_spont$abnormalities=="Normal")
 
 models<- glmulti(buds_10~donor*donor_status*receiver*diff_maxR*Tumors, 
                  data=donor_spontN, 
-                 level = 2, method = 'h', crit='aicc',fitfunction = 'lm')
+                 level = 2, method = 'h', crit='aicc',fitfunction = 'lm', pl = FALSE)
 
 tmp <- weightable(models)
 tmp2 <- tmp[tmp$aicc <= min(tmp$aicc) + 2,]
@@ -211,6 +212,9 @@ It seems than the appearance of tumors in certain donor, and the interaction of 
 ### Intra group analysis
 
 ```{r}
+donor_spontN$groupDR <- as.factor(paste0(donor_spontN$donor, donor_spontN$donor_status, donor_spontN$receiver))
+summary(donor_spontN$groupDR)
+
 best_rt10.4 <- lmer(buds_10 ~ 1 + diff_maxR * Tumors + (1|groupDR), 
                   data=donor_spontN)
 best_rt10.3 <- lmer(buds_10 ~ 1 + diff_maxR + Tumors + (1|groupDR), 
