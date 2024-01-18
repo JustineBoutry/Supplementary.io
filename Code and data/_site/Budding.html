@@ -255,7 +255,10 @@ $(document).ready(function () {
   <a href="Tenta2.html">4. Tentacules numbers</a>
 </li>
 <li>
-  <a href="Packa1.html">5. About</a>
+  <a href="Budding.html">5. Tentacules and budding</a>
+</li>
+<li>
+  <a href="Packa1.html">6. About</a>
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
@@ -274,10 +277,10 @@ $(document).ready(function () {
 
 
 <div
-id="model-analysis-of-the-parameters-influencing-the-number-of-buds-produced-during-the-study"
+id="analysis-of-parameters-influencing-the-number-of-buds-produced-during-the-study"
 class="section level1">
-<h1>Model analysis of the parameters influencing the number of buds
-produced during the study</h1>
+<h1>Analysis of Parameters Influencing the Number of Buds Produced
+during the Study</h1>
 <div id="transmissible-tumors-dataset" class="section level2">
 <h2>Transmissible tumors dataset</h2>
 <div id="global-model-selection" class="section level3">
@@ -313,19 +316,16 @@ best_rt6 &lt;- lm(buds_10 ~ 1 + donor + donor_status + receiver + Tumors + diff_
     receiver:donor_status + Tumors:donor_status + Tumors:receiver + donor:diff_maxR,
     data = donor_transN)
 
-tab_model(best_rt1, best_rt2, best_rt3, best_rt4, best_rt5, best_rt6, show.intercept = F)
-
-simulateResiduals(best_rt5, plot = T)</code></pre>
-<p><img src="Budding_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
+tab_model(best_rt1, best_rt2, best_rt3, best_rt4, best_rt5, best_rt6, show.intercept = F)</code></pre>
 <p><br />
-It seems than the appearance of tumors in certain receiver, and the
-interaction of recipient and donor status are the factor influencing the
-most the number of buds produced.<br />
-However the number of tentacles seems also to play a role than cannont
-be ruled out. In order to refocus the analysis on the parameters of our
-interest, we will create groups of donor and recipient, in the purpose
-of analyzing the general relationship between tentacles number and
-budding at the intra-group level.</p>
+It appears that the appearance of tumors in certain receivers and the
+interaction of recipient and donor status are the factors influencing
+the most the number of buds produced. However, the number of tentacles
+also seems to play a role that cannot be ruled out. To focus the
+analysis on our parameters of interest, we will create groups of donors
+and recipients to analyze the general relationship between tentacle
+number and budding at the intra-group level.<br />
+</p>
 </div>
 <div id="intra-group-analysis" class="section level3">
 <h3>Intra-group analysis</h3>
@@ -789,9 +789,10 @@ Marginal R<sup>2</sup> / Conditional R<sup>2</sup>
 </td>
 </tr>
 </table>
-<p>If we look at the intra group level, the number of supernumerary
-tentacles and the presence of tumors interact in a significant way to
-explain the budding rate.<br />
+<p><br />
+If we look at the intra-group level, the number of supernumerary
+tentacles and the presence of tumors interact significantly to explain
+the budding rate.<br />
 </p>
 </div>
 </div>
@@ -2609,247 +2610,28 @@ Marginal R<sup>2</sup> / Conditional R<sup>2</sup>
 </tr>
 </table>
 <p><br />
-The relationship between the number of tentacles, the tumor presence and
-the budding seems to appear only after the third week, which correspond
+The relationship between the number of tentacles, the tumor presence,
+and the budding seems to appear only after the third week, corresponding
 to the establishment of the tumorous phenotype and the increase in the
 number of tentacles.<br />
-## Spontaneaous tumors dataset</p>
+</p>
 </div>
-<div id="global-model" class="section level3">
-<h3>Global model</h3>
+</div>
+<div id="spontaneaous-tumors-dataset" class="section level2">
+<h2>Spontaneaous tumors dataset</h2>
+<div id="global-model-selection-1" class="section level3">
+<h3>Global model selection</h3>
 <pre class="r"><code>donor_spontN &lt;- subset(donor_spont, donor_spont$abnormalities == &quot;Normal&quot;)
 
 models &lt;- glmulti(buds_10 ~ donor * donor_status * receiver * diff_maxR * Tumors,
     data = donor_spontN, level = 2, method = &quot;h&quot;, crit = &quot;aicc&quot;, fitfunction = &quot;lm&quot;,
-    pl = FALSE)</code></pre>
-<pre><code>## Initialization...
-## TASK: Exhaustive screening of candidate set.
-## Fitting...
-## 
-## After 50 models:
-## Best model: buds_10~1+diff_maxR+donor:diff_maxR+donor_status:diff_maxR+receiver:diff_maxR
-## Crit= 380.406714038106
-## Mean crit= 388.826661849473
-## 
-## After 100 models:
-## Best model: buds_10~1+receiver+diff_maxR+donor:diff_maxR
-## Crit= 378.929257446138
-## Mean crit= 389.008481275533
-## 
-## After 150 models:
-## Best model: buds_10~1+donor+receiver+diff_maxR+receiver:donor+donor:diff_maxR+donor_status:diff_maxR
-## Crit= 365.195200354047
-## Mean crit= 381.747939043406
-## 
-## After 200 models:
-## Best model: buds_10~1+donor+receiver+diff_maxR+receiver:donor+donor:diff_maxR+donor_status:diff_maxR
-## Crit= 365.195200354047
-## Mean crit= 380.653945687345
-## 
-## After 250 models:
-## Best model: buds_10~1+donor+receiver+diff_maxR+receiver:donor+donor:diff_maxR+donor_status:diff_maxR
-## Crit= 365.195200354047
-## Mean crit= 376.078918376297
-## 
-## After 300 models:
-## Best model: buds_10~1+donor+receiver+diff_maxR+receiver:donor+donor:diff_maxR+donor_status:diff_maxR
-## Crit= 365.195200354047
-## Mean crit= 374.206325768277
-## 
-## After 350 models:
-## Best model: buds_10~1+donor+receiver+diff_maxR+receiver:donor+donor:diff_maxR+donor_status:diff_maxR
-## Crit= 365.195200354047
-## Mean crit= 372.856961259781
-## 
-## After 400 models:
-## Best model: buds_10~1+donor+receiver+diff_maxR+receiver:donor+donor:diff_maxR+donor_status:diff_maxR
-## Crit= 365.195200354047
-## Mean crit= 372.856961259781
-## 
-## After 450 models:
-## Best model: buds_10~1+donor+receiver+diff_maxR+receiver:donor+donor:diff_maxR+donor_status:diff_maxR
-## Crit= 365.195200354047
-## Mean crit= 372.856961259781
-## 
-## After 500 models:
-## Best model: buds_10~1+donor+receiver+diff_maxR+receiver:donor+donor:diff_maxR+donor_status:diff_maxR
-## Crit= 365.195200354047
-## Mean crit= 372.856961259781
-## 
-## After 550 models:
-## Best model: buds_10~1+donor+receiver+diff_maxR+receiver:donor+donor:diff_maxR+donor_status:diff_maxR
-## Crit= 365.195200354047
-## Mean crit= 372.856961259781
-## 
-## After 600 models:
-## Best model: buds_10~1+donor+receiver+diff_maxR+receiver:donor+donor:diff_maxR+donor_status:diff_maxR
-## Crit= 365.195200354047
-## Mean crit= 372.788491710772
-## 
-## After 650 models:
-## Best model: buds_10~1+donor+receiver+diff_maxR+receiver:donor+donor:diff_maxR+donor_status:diff_maxR
-## Crit= 365.195200354047
-## Mean crit= 372.788491710772
-## 
-## After 700 models:
-## Best model: buds_10~1+donor+receiver+Tumors+diff_maxR+receiver:donor+Tumors:donor+donor_status:diff_maxR
-## Crit= 364.102367753579
-## Mean crit= 369.201894860377
-## 
-## After 750 models:
-## Best model: buds_10~1+donor+receiver+Tumors+diff_maxR+receiver:donor+Tumors:donor+donor_status:diff_maxR
-## Crit= 364.102367753579
-## Mean crit= 368.706827564688
-## 
-## After 800 models:
-## Best model: buds_10~1+donor+receiver+Tumors+diff_maxR+receiver:donor+Tumors:donor+donor_status:diff_maxR
-## Crit= 364.102367753579
-## Mean crit= 368.706827564688
-## 
-## After 850 models:
-## Best model: buds_10~1+donor+receiver+Tumors+diff_maxR+receiver:donor+Tumors:donor+donor_status:diff_maxR
-## Crit= 364.102367753579
-## Mean crit= 368.706827564688
-## 
-## After 900 models:
-## Best model: buds_10~1+donor+receiver+Tumors+diff_maxR+receiver:donor+Tumors:donor+donor_status:diff_maxR
-## Crit= 364.102367753579
-## Mean crit= 368.706827564688
-## 
-## After 950 models:
-## Best model: buds_10~1+donor+receiver+Tumors+diff_maxR+receiver:donor+Tumors:donor+donor_status:diff_maxR
-## Crit= 364.102367753579
-## Mean crit= 368.706827564688
-## 
-## After 1000 models:
-## Best model: buds_10~1+donor+receiver+Tumors+diff_maxR+receiver:donor+Tumors:donor+donor_status:diff_maxR
-## Crit= 364.102367753579
-## Mean crit= 368.706827564688
-## 
-## After 1050 models:
-## Best model: buds_10~1+donor+receiver+Tumors+diff_maxR+receiver:donor+Tumors:donor+donor_status:diff_maxR
-## Crit= 364.102367753579
-## Mean crit= 368.706827564688
-## 
-## After 1100 models:
-## Best model: buds_10~1+donor+receiver+Tumors+diff_maxR+receiver:donor+Tumors:donor+donor_status:diff_maxR
-## Crit= 364.102367753579
-## Mean crit= 368.706827564688
-## 
-## After 1150 models:
-## Best model: buds_10~1+donor+receiver+Tumors+diff_maxR+receiver:donor+Tumors:donor+donor_status:diff_maxR
-## Crit= 364.102367753579
-## Mean crit= 368.706827564688
-## 
-## After 1200 models:
-## Best model: buds_10~1+donor+receiver+Tumors+diff_maxR+receiver:donor+Tumors:donor+donor_status:diff_maxR
-## Crit= 364.102367753579
-## Mean crit= 368.706827564688
-## 
-## After 1250 models:
-## Best model: buds_10~1+donor+receiver+Tumors+diff_maxR+receiver:donor+Tumors:donor+donor_status:diff_maxR
-## Crit= 364.102367753579
-## Mean crit= 368.200719597268
-## 
-## After 1300 models:
-## Best model: buds_10~1+donor+receiver+Tumors+diff_maxR+receiver:donor+Tumors:donor+donor_status:diff_maxR
-## Crit= 364.102367753579
-## Mean crit= 368.047838840757
-## 
-## After 1350 models:
-## Best model: buds_10~1+donor+receiver+Tumors+diff_maxR+receiver:donor+Tumors:donor+donor_status:diff_maxR
-## Crit= 364.102367753579
-## Mean crit= 368.024630778546
-## 
-## After 1400 models:
-## Best model: buds_10~1+donor+receiver+Tumors+diff_maxR+receiver:donor+Tumors:donor+donor_status:diff_maxR
-## Crit= 364.102367753579
-## Mean crit= 367.855727638629
-## 
-## After 1450 models:
-## Best model: buds_10~1+donor+receiver+Tumors+diff_maxR+receiver:donor+Tumors:donor+donor_status:diff_maxR
-## Crit= 364.102367753579
-## Mean crit= 367.77473957776
-## 
-## After 1500 models:
-## Best model: buds_10~1+donor+receiver+Tumors+diff_maxR+receiver:donor+Tumors:donor+donor_status:diff_maxR
-## Crit= 364.102367753579
-## Mean crit= 367.77473957776
-## 
-## After 1550 models:
-## Best model: buds_10~1+donor+receiver+Tumors+diff_maxR+receiver:donor+Tumors:donor+donor_status:diff_maxR
-## Crit= 364.102367753579
-## Mean crit= 367.77473957776
-## 
-## After 1600 models:
-## Best model: buds_10~1+donor+receiver+Tumors+diff_maxR+receiver:donor+Tumors:donor+donor_status:diff_maxR
-## Crit= 364.102367753579
-## Mean crit= 367.77473957776
-## 
-## After 1650 models:
-## Best model: buds_10~1+donor+receiver+Tumors+diff_maxR+receiver:donor+Tumors:donor+donor_status:diff_maxR
-## Crit= 364.102367753579
-## Mean crit= 367.77473957776
-## 
-## After 1700 models:
-## Best model: buds_10~1+donor+receiver+Tumors+diff_maxR+receiver:donor+Tumors:donor+donor_status:diff_maxR
-## Crit= 364.102367753579
-## Mean crit= 367.77473957776
-## 
-## After 1750 models:
-## Best model: buds_10~1+donor+receiver+Tumors+diff_maxR+receiver:donor+Tumors:donor+donor_status:diff_maxR
-## Crit= 364.102367753579
-## Mean crit= 367.754614340676
-## 
-## After 1800 models:
-## Best model: buds_10~1+donor+receiver+Tumors+diff_maxR+receiver:donor+Tumors:donor+donor_status:diff_maxR
-## Crit= 364.102367753579
-## Mean crit= 367.754614340676
-## 
-## After 1850 models:
-## Best model: buds_10~1+donor+receiver+Tumors+diff_maxR+receiver:donor+Tumors:donor+donor_status:diff_maxR
-## Crit= 364.102367753579
-## Mean crit= 367.754614340676
-## 
-## After 1900 models:
-## Best model: buds_10~1+donor+receiver+Tumors+diff_maxR+receiver:donor+Tumors:donor+donor_status:diff_maxR
-## Crit= 364.102367753579
-## Mean crit= 367.750500972468
-## 
-## After 1950 models:
-## Best model: buds_10~1+donor+receiver+Tumors+diff_maxR+receiver:donor+Tumors:donor+donor_status:diff_maxR
-## Crit= 364.102367753579
-## Mean crit= 367.750500972468
-## 
-## After 2000 models:
-## Best model: buds_10~1+donor+receiver+Tumors+diff_maxR+receiver:donor+Tumors:donor+donor_status:diff_maxR
-## Crit= 364.102367753579
-## Mean crit= 367.750500972468
-## Completed.</code></pre>
-<pre class="r"><code>tmp &lt;- weightable(models)
+    pl = FALSE)
+
+tmp &lt;- weightable(models)
 tmp2 &lt;- tmp[tmp$aicc &lt;= min(tmp$aicc) + 2, ]
-tmp2</code></pre>
-<pre><code>##                                                                                                                                              model
-## 1                                     buds_10 ~ 1 + donor + receiver + Tumors + diff_maxR + receiver:donor + Tumors:donor + donor_status:diff_maxR
-## 2                buds_10 ~ 1 + donor + receiver + Tumors + diff_maxR + receiver:donor + Tumors:donor + donor_status:diff_maxR + receiver:diff_maxR
-## 3                                           buds_10 ~ 1 + donor + receiver + diff_maxR + receiver:donor + donor:diff_maxR + donor_status:diff_maxR
-## 4                      buds_10 ~ 1 + donor + donor_status + receiver + Tumors + diff_maxR + receiver:donor + Tumors:donor + donor_status:diff_maxR
-## 5                            buds_10 ~ 1 + donor + donor_status + receiver + diff_maxR + receiver:donor + donor:diff_maxR + donor_status:diff_maxR
-## 6                  buds_10 ~ 1 + donor + receiver + Tumors + diff_maxR + receiver:donor + Tumors:donor + donor_status:diff_maxR + Tumors:diff_maxR
-## 7                                                             buds_10 ~ 1 + donor + receiver + diff_maxR + receiver:donor + donor_status:diff_maxR
-## 8 buds_10 ~ 1 + donor + donor_status + receiver + Tumors + diff_maxR + donor_status:donor + receiver:donor + Tumors:donor + donor_status:diff_maxR
-## 9                   buds_10 ~ 1 + donor + receiver + Tumors + diff_maxR + receiver:donor + Tumors:donor + donor:diff_maxR + donor_status:diff_maxR
-##       aicc    weights
-## 1 364.1024 0.05090743
-## 2 365.0584 0.03156294
-## 3 365.1952 0.02947648
-## 4 365.2854 0.02817681
-## 5 365.3066 0.02787976
-## 6 365.4817 0.02554234
-## 7 365.7497 0.02233886
-## 8 365.8744 0.02098923
-## 9 365.9947 0.01976331</code></pre>
-<pre class="r"><code>best_rt1 &lt;- lm(buds_10 ~ 1 + donor + receiver + Tumors + diff_maxR + receiver:donor +
+tmp2
+
+best_rt1 &lt;- lm(buds_10 ~ 1 + donor + receiver + Tumors + diff_maxR + receiver:donor +
     Tumors:donor + donor_status:diff_maxR, data = donor_spontN)
 
 best_rt2 &lt;- lm(buds_10 ~ 1 + donor + receiver + Tumors + diff_maxR + receiver:donor +
@@ -2878,1176 +2660,13 @@ best_rt9 &lt;- lm(buds_10 ~ 1 + donor + receiver + Tumors + diff_maxR + receiver
 
 tab_model(best_rt1, best_rt2, best_rt3, best_rt4, best_rt5, best_rt6, best_rt7, best_rt8,
     best_rt9, show.intercept = F)</code></pre>
-<table style="border-collapse:collapse; border:none;">
-<tr>
-<th style="border-top: double; text-align:center; font-style:normal; font-weight:bold; padding:0.2cm;  text-align:left; ">
- 
-</th>
-<th colspan="3" style="border-top: double; text-align:center; font-style:normal; font-weight:bold; padding:0.2cm; ">
-buds_10
-</th>
-<th colspan="3" style="border-top: double; text-align:center; font-style:normal; font-weight:bold; padding:0.2cm; ">
-buds_10
-</th>
-<th colspan="3" style="border-top: double; text-align:center; font-style:normal; font-weight:bold; padding:0.2cm; ">
-buds_10
-</th>
-<th colspan="3" style="border-top: double; text-align:center; font-style:normal; font-weight:bold; padding:0.2cm; ">
-buds_10
-</th>
-<th colspan="3" style="border-top: double; text-align:center; font-style:normal; font-weight:bold; padding:0.2cm; ">
-buds_10
-</th>
-<th colspan="3" style="border-top: double; text-align:center; font-style:normal; font-weight:bold; padding:0.2cm; ">
-buds_10
-</th>
-<th colspan="3" style="border-top: double; text-align:center; font-style:normal; font-weight:bold; padding:0.2cm; ">
-buds_10
-</th>
-<th colspan="3" style="border-top: double; text-align:center; font-style:normal; font-weight:bold; padding:0.2cm; ">
-buds_10
-</th>
-<th colspan="3" style="border-top: double; text-align:center; font-style:normal; font-weight:bold; padding:0.2cm; ">
-buds_10
-</th>
-</tr>
-<tr>
-<td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  text-align:left; ">
-Predictors
-</td>
-<td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  ">
-Estimates
-</td>
-<td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  ">
-CI
-</td>
-<td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  ">
-p
-</td>
-<td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  ">
-Estimates
-</td>
-<td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  ">
-CI
-</td>
-<td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  col7">
-p
-</td>
-<td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  col8">
-Estimates
-</td>
-<td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  col9">
-CI
-</td>
-<td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  0">
-p
-</td>
-<td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  1">
-Estimates
-</td>
-<td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  2">
-CI
-</td>
-<td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  3">
-p
-</td>
-<td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  4">
-Estimates
-</td>
-<td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  5">
-CI
-</td>
-<td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  6">
-p
-</td>
-<td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  7">
-Estimates
-</td>
-<td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  8">
-CI
-</td>
-<td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  9">
-p
-</td>
-<td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  0">
-Estimates
-</td>
-<td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  1">
-CI
-</td>
-<td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  2">
-p
-</td>
-<td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  3">
-Estimates
-</td>
-<td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  4">
-CI
-</td>
-<td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  5">
-p
-</td>
-<td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  6">
-Estimates
-</td>
-<td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  7">
-CI
-</td>
-<td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  8">
-p
-</td>
-</tr>
-<tr>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-donor [MT]
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
--6.51
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
--11.92 – -1.10
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
-<strong>0.019</strong>
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
--6.51
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
--11.88 – -1.13
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  col7">
-<strong>0.019</strong>
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  col8">
--7.24
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  col9">
--12.30 – -2.18
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  0">
-<strong>0.006</strong>
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  1">
--6.22
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  2">
--11.62 – -0.81
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  3">
-<strong>0.025</strong>
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  4">
--6.76
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  5">
--11.80 – -1.73
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  6">
-<strong>0.009</strong>
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  7">
--6.64
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  8">
--12.04 – -1.24
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  9">
-<strong>0.017</strong>
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  0">
--6.64
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  1">
--12.04 – -1.24
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  2">
-<strong>0.017</strong>
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center; modelcolumn8 3">
--7.30
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center; modelcolumn8 4">
--12.85 – -1.74
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center; modelcolumn8 5">
-<strong>0.011</strong>
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center; modelcolumn9 6">
--5.80
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center; modelcolumn9 7">
--11.43 – -0.18
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center; modelcolumn9 8">
-<strong>0.043</strong>
-</td>
-</tr>
-<tr>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-receiver [TV]
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
--10.21
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
--14.11 – -6.30
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
-<strong>&lt;0.001</strong>
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
--9.23
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
--13.39 – -5.06
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  col7">
-<strong>&lt;0.001</strong>
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  col8">
--10.03
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  col9">
--14.02 – -6.03
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  0">
-<strong>&lt;0.001</strong>
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  1">
--10.23
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  2">
--14.12 – -6.34
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  3">
-<strong>&lt;0.001</strong>
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  4">
--10.02
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  5">
--13.96 – -6.07
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  6">
-<strong>&lt;0.001</strong>
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  7">
--10.25
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  8">
--14.15 – -6.36
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  9">
-<strong>&lt;0.001</strong>
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  0">
--10.25
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  1">
--14.15 – -6.36
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  2">
-<strong>&lt;0.001</strong>
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center; modelcolumn8 3">
--10.41
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center; modelcolumn8 4">
--14.27 – -6.56
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center; modelcolumn8 5">
-<strong>&lt;0.001</strong>
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center; modelcolumn9 6">
--10.04
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center; modelcolumn9 7">
--13.97 – -6.11
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center; modelcolumn9 8">
-<strong>&lt;0.001</strong>
-</td>
-</tr>
-<tr>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-Tumors [1]
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
-0.56
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
--3.49 – 4.60
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
-0.784
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
-0.53
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
--3.50 – 4.55
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  col7">
-0.794
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  col8">
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  col9">
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  0">
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  1">
-0.76
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  2">
--3.29 – 4.80
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  3">
-0.709
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  4">
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  5">
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  6">
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  7">
--0.08
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  8">
--4.26 – 4.11
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  9">
-0.971
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  0">
--0.08
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  1">
--4.26 – 4.11
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  2">
-0.971
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center; modelcolumn8 3">
-1.22
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center; modelcolumn8 4">
--2.84 – 5.27
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center; modelcolumn8 5">
-0.549
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center; modelcolumn9 6">
-0.30
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center; modelcolumn9 7">
--3.79 – 4.39
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center; modelcolumn9 8">
-0.883
-</td>
-</tr>
-<tr>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-diff maxR
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
-0.32
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
--1.02 – 1.67
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
-0.631
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
-0.77
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
--0.73 – 2.28
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  col7">
-0.308
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  col8">
-0.64
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  col9">
--0.83 – 2.11
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  0">
-0.383
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  1">
-0.17
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  2">
--1.20 – 1.53
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  3">
-0.806
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  4">
-0.50
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  5">
--0.96 – 1.97
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  6">
-0.492
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  7">
--1.51
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  8">
--4.97 – 1.95
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  9">
-0.386
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  0">
--1.51
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  1">
--4.97 – 1.95
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  2">
-0.386
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center; modelcolumn8 3">
-0.09
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center; modelcolumn8 4">
--1.26 – 1.44
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center; modelcolumn8 5">
-0.895
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center; modelcolumn9 6">
-0.61
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center; modelcolumn9 7">
--0.87 – 2.09
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center; modelcolumn9 8">
-0.412
-</td>
-</tr>
-<tr>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-donor [MT] × receiver<br>[TV]
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
-15.76
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
-9.76 – 21.77
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
-<strong>&lt;0.001</strong>
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
-15.38
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
-9.39 – 21.37
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  col7">
-<strong>&lt;0.001</strong>
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  col8">
-12.77
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  col9">
-6.55 – 18.98
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  0">
-<strong>&lt;0.001</strong>
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  1">
-15.89
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  2">
-9.91 – 21.87
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  3">
-<strong>&lt;0.001</strong>
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  4">
-12.96
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  5">
-6.83 – 19.10
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  6">
-<strong>&lt;0.001</strong>
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  7">
-15.74
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  8">
-9.75 – 21.72
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  9">
-<strong>&lt;0.001</strong>
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  0">
-15.74
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  1">
-9.75 – 21.72
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  2">
-<strong>&lt;0.001</strong>
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center; modelcolumn8 3">
-16.27
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center; modelcolumn8 4">
-10.33 – 22.21
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center; modelcolumn8 5">
-<strong>&lt;0.001</strong>
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center; modelcolumn9 6">
-14.76
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center; modelcolumn9 7">
-8.38 – 21.14
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center; modelcolumn9 8">
-<strong>&lt;0.001</strong>
-</td>
-</tr>
-<tr>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-donor [MT] × Tumors [1]
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
--6.10
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
--11.92 – -0.28
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
-<strong>0.040</strong>
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
--5.93
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
--11.72 – -0.14
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  col7">
-<strong>0.045</strong>
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  col8">
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  col9">
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  0">
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  1">
--6.00
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  2">
--11.80 – -0.20
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  3">
-<strong>0.043</strong>
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  4">
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  5">
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  6">
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  7">
--5.79
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  8">
--11.62 – 0.04
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  9">
-0.051
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  0">
--5.79
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  1">
--11.62 – 0.04
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  2">
-0.051
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center; modelcolumn8 3">
--6.82
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center; modelcolumn8 4">
--12.67 – -0.97
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center; modelcolumn8 5">
-<strong>0.023</strong>
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center; modelcolumn9 6">
--5.13
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center; modelcolumn9 7">
--11.32 – 1.05
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center; modelcolumn9 8">
-0.102
-</td>
-</tr>
-<tr>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-diff maxR × donor statusT
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
-2.91
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
-0.17 – 5.64
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
-<strong>0.038</strong>
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
-2.90
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
-0.18 – 5.61
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  col7">
-<strong>0.037</strong>
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  col8">
-2.95
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  col9">
-0.23 – 5.67
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  0">
-<strong>0.034</strong>
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  1">
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  2">
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  3">
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  4">
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  5">
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  6">
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  7">
-2.86
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  8">
-0.13 – 5.59
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  9">
-<strong>0.040</strong>
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  0">
-2.86
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  1">
-0.13 – 5.59
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  2">
-<strong>0.040</strong>
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center; modelcolumn8 3">
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center; modelcolumn8 4">
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center; modelcolumn8 5">
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center; modelcolumn9 6">
-2.97
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center; modelcolumn9 7">
-0.23 – 5.71
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center; modelcolumn9 8">
-<strong>0.034</strong>
-</td>
-</tr>
-<tr>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-receiver [TV] × diff maxR
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
--1.88
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
--4.78 – 1.02
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  col7">
-0.199
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  col8">
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  col9">
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  0">
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  1">
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  2">
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  3">
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  4">
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  5">
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  6">
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  7">
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  8">
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  9">
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  0">
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  1">
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  2">
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center; modelcolumn8 3">
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center; modelcolumn8 4">
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center; modelcolumn8 5">
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center; modelcolumn9 6">
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center; modelcolumn9 7">
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center; modelcolumn9 8">
-</td>
-</tr>
-<tr>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-donor [MT] × diff maxR
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  col7">
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  col8">
--2.75
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  col9">
--5.98 – 0.47
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  0">
-0.092
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  1">
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  2">
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  3">
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  4">
--2.89
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  5">
--6.08 – 0.30
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  6">
-0.075
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  7">
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  8">
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  9">
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  0">
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  1">
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  2">
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center; modelcolumn8 3">
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center; modelcolumn8 4">
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center; modelcolumn8 5">
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center; modelcolumn9 6">
--1.58
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center; modelcolumn9 7">
--4.95 – 1.79
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center; modelcolumn9 8">
-0.351
-</td>
-</tr>
-<tr>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-donor status [T]
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  col7">
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  col8">
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  col9">
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  0">
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  1">
--2.21
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  2">
--5.85 – 1.42
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  3">
-0.227
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  4">
--2.81
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  5">
--6.47 – 0.85
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  6">
-0.129
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  7">
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  8">
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  9">
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  0">
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  1">
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  2">
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center; modelcolumn8 3">
--4.91
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center; modelcolumn8 4">
--10.11 – 0.29
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center; modelcolumn8 5">
-0.063
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center; modelcolumn9 6">
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center; modelcolumn9 7">
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center; modelcolumn9 8">
-</td>
-</tr>
-<tr>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-donor status [T] × diff<br>maxR
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  col7">
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  col8">
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  col9">
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  0">
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  1">
-4.22
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  2">
-0.75 – 7.69
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  3">
-<strong>0.018</strong>
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  4">
-4.66
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  5">
-1.17 – 8.16
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  6">
-<strong>0.010</strong>
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  7">
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  8">
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  9">
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  0">
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  1">
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  2">
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center; modelcolumn8 3">
-5.11
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center; modelcolumn8 4">
-1.46 – 8.77
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center; modelcolumn8 5">
-<strong>0.007</strong>
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center; modelcolumn9 6">
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center; modelcolumn9 7">
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center; modelcolumn9 8">
-</td>
-</tr>
-<tr>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-Tumors [1] × diff maxR
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  col7">
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  col8">
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  col9">
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  0">
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  1">
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  2">
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  3">
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  4">
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  5">
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  6">
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  7">
-2.12
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  8">
--1.57 – 5.81
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  9">
-0.255
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  0">
-2.12
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  1">
--1.57 – 5.81
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  2">
-0.255
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center; modelcolumn8 3">
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center; modelcolumn8 4">
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center; modelcolumn8 5">
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center; modelcolumn9 6">
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center; modelcolumn9 7">
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center; modelcolumn9 8">
-</td>
-</tr>
-<tr>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-donor [MT] × donor status<br>[T]
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  col7">
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  col8">
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  col9">
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  0">
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  1">
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  2">
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  3">
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  4">
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  5">
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  6">
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  7">
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  8">
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  9">
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  0">
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  1">
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  2">
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center; modelcolumn8 3">
-4.32
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center; modelcolumn8 4">
--1.69 – 10.33
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center; modelcolumn8 5">
-0.155
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center; modelcolumn9 6">
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center; modelcolumn9 7">
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center; modelcolumn9 8">
-</td>
-</tr>
-<tr>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm; border-top:1px solid;">
-Observations
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left; border-top:1px solid;" colspan="3">
-58
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left; border-top:1px solid;" colspan="3">
-58
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left; border-top:1px solid;" colspan="3">
-58
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left; border-top:1px solid;" colspan="3">
-58
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left; border-top:1px solid;" colspan="3">
-58
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left; border-top:1px solid;" colspan="3">
-58
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left; border-top:1px solid;" colspan="3">
-58
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left; border-top:1px solid;" colspan="3">
-58
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left; border-top:1px solid;" colspan="3">
-58
-</td>
-</tr>
-<tr>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm;">
-R<sup>2</sup> / R<sup>2</sup> adjusted
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="3">
-0.538 / 0.473
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="3">
-0.554 / 0.481
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="3">
-0.506 / 0.448
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="3">
-0.552 / 0.479
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="3">
-0.528 / 0.462
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="3">
-0.550 / 0.477
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="3">
-0.550 / 0.477
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="3">
-0.571 / 0.490
-</td>
-<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="3">
-0.546 / 0.472
-</td>
-</tr>
-</table>
-<pre class="r"><code>simulateResiduals(best_rt5, plot = T)</code></pre>
-<p><img src="Budding_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
-<pre><code>## Object of Class DHARMa with simulated residuals based on 250 simulations with refit = FALSE . See ?DHARMa::simulateResiduals for help. 
-##  
-## Scaled residual values: 0.7 0.868 0.736 0.224 0.844 0.868 0.568 0.608 0.46 0.504 0.384 0.12 0.556 0.572 0.36 0.856 0.616 0.604 0.316 0.172 ...</code></pre>
 <p><br />
-It seems than the appearance of tumors in certain donor, and the
-interaction of recipient and donor are the factor influencing the most
-the number of buds, the number of tentacles seems also to play a role
-when the donor was tumorous. In order to refocus the analysis on the
-parameters of our interest, we will create groups of donor and
-recipient.</p>
+It seems that the appearance of tumors in certain donors and the
+interaction of recipient and donor are the factors influencing the most
+the number of buds. The number of tentacles also seems to play a role
+when the donor was tumorous. To focus the analysis on the parameters of
+interest, we will create groups of donors and recipients.<br />
+</p>
 </div>
 <div id="intra-group-analysis-1" class="section level3">
 <h3>Intra group analysis</h3>
@@ -4510,14 +3129,18 @@ Marginal R<sup>2</sup> / Conditional R<sup>2</sup>
 </td>
 </tr>
 </table>
-<p>If we look at the intra group level, there is no clear relationship.
-Which is quite expected given the absence of increased number of
-tentacles when the donor was a spontaneous tumors.</p>
+<p><br />
+If we look at the intra-group level, there is no clear relationship,
+which is quite expected given the absence of an increased number of
+tentacles when the donor was a spontaneous tumor.<br />
+</p>
 </div>
 </div>
 <div id="when-does-this-relationship-establish-1"
 class="section level3">
 <h3>When does this relationship establish ?</h3>
+<p><br />
+</p>
 <pre class="r"><code>best_rt10 &lt;- lmer(buds_10 ~ 1 + tenta_10 * Tumors + (1 | groupDR), data = donor_spontN)
 best_rt9 &lt;- lmer(buds_9 ~ 1 + tenta_9 * Tumors + (1 | groupDR), data = donor_spontN)
 best_rt8 &lt;- lmer(buds_8 ~ 1 + tenta_8 * Tumors + (1 | groupDR), data = donor_spontN)
@@ -6330,13 +4953,15 @@ Marginal R<sup>2</sup> / Conditional R<sup>2</sup>
 </td>
 </tr>
 </table>
-<p>This is coherent, no relationship because of not enough
-variations.</p>
+<p><br />
+This is coherent; no relationship is observed due to not enough
+variations.<br />
+</p>
 </div>
 </div>
 <div id="global-dataset-spontaneous-and-transmissible-tumors-together"
 class="section level2">
-<h2>Global dataset, spontaneous and transmissible tumors together</h2>
+<h2>Global Dataset: Spontaneous and Transmissible Tumors Together</h2>
 <div id="intra-group-analysis-2" class="section level3">
 <h3>Intra group analysis</h3>
 <pre class="r"><code>data_1$groupDR &lt;- as.factor(paste0(data_1$donor, data_1$donor_status, data_1$recipient))</code></pre>
@@ -6685,9 +5310,11 @@ Marginal R<sup>2</sup> / Conditional R<sup>2</sup>
 </td>
 </tr>
 </table>
-<p>The combination of increased number of tentacles and tumor presence
-explains a significant part of the budding rate experienced intra
-group.</p>
+<p><br />
+The combination of increased number of tentacles and tumor presence
+explains a significant part of the budding rate experienced
+intra-group.<br />
+</p>
 <p><img src="Budding_files/figure-html/unnamed-chunk-17-1.png" width="672" /></p>
 </div>
 </div>
@@ -8493,12 +7120,10 @@ Marginal R<sup>2</sup> / Conditional R<sup>2</sup>
 </td>
 </tr>
 </table>
-<p><img src="Budding_files/figure-html/unnamed-chunk-18-1.png" width="672" /></p>
-<pre><code>## Object of Class DHARMa with simulated residuals based on 250 simulations with refit = FALSE . See ?DHARMa::simulateResiduals for help. 
-##  
-## Scaled residual values: 0.212 0.46 0.32 0.244 0.416 0.656 0.832 0.44 0.368 0.088 0.64 0.816 0.984 0.564 0.224 0.9 0.832 0.036 0.548 0.46 ...</code></pre>
-<p>Again very coherent results, the relationship starts when the
-tumorous phenotype, including supernumerary tentacles is expressed.</p>
+<p><br />
+Again, very coherent results; the relationship starts when the tumorous
+phenotype, including supernumerary tentacles, is expressed.<br />
+</p>
 <pre><code>##             df     AICc
 ## best_rt10.1  6 909.2623
 ## best_rt10.2  5 918.7976
@@ -8672,9 +7297,11 @@ Marginal R<sup>2</sup> / Conditional R<sup>2</sup>
 </td>
 </tr>
 </table>
-<p>The relationship between direct number of tentcales at the week 10
-and budding rate is even stronger, however we prefer to keep consistent
-indicator into the final analysis.</p>
+<p><br />
+The relationship between the direct number of tentacles at week 10 and
+budding rate is even stronger; however, we prefer to keep a consistent
+indicator in the final analysis.<br />
+</p>
 </div>
 </div>
 <div id="data-visualisation" class="section level2">
