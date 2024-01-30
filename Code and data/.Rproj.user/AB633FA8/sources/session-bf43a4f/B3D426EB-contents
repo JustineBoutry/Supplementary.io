@@ -1,0 +1,76 @@
+
+```{r , include=FALSE}
+library(readr)
+library(ggplot2)
+library(glmulti)
+library(ggpubr)
+library(ggstatsplot)
+library(lme4)
+library(DHARMa)
+library(sjPlot)
+library(svglite)
+library(glmmTMB)
+library(lme4)
+library(MuMIn)
+library(glmulti)
+library(MASS)
+library(ggridges)
+library(lmtest)
+library(dplyr)
+library(patchwork)
+library(survival)
+```
+
+# Dataset presentation
+
+We chose to evaluate data with transferred tumours and data with spontaneous tumours individually to avoid model contrasts with missing categories (Rob has no spontaneous tumours, whereas Mt has no transferred tumours).
+
+Both data sets feature the following variables : 
+
+**ID** refers to the individual's tracking identifier.
+
+**Manipulator** refers to the person who performed the grafts.
+
+**donor** designates the lineage of the graft donor: Mt, SpB or Rob.
+
+**donor_status** refers to the absence or presence of tumors in the graft donor. 
+
+**donor_tentacle** refers to the number of tentacles on the graft donor 
+
+**recipient** designates the lineage of the recipient individual (SpB, TV for the wild group)
+
+**recipient_tentacle** refers to the number of tentacles on the graft recipient
+
+**batch** designates the graft batch (depending on the day/time and the manipulator who produced a graft batch)
+
+**date_draft** refers to the day of the graft
+
+**abnormalities** refers to whether or not developmental abnormalities were observed
+
+**dateT** designates the number of days (post-transplant) at which tumors appeared (or not if NA) in the focal individual
+
+**Tumors** codes 0 for individuals who have never developed tumors and 1 for individuals who have developed tumors during the post-grafting following period.
+
+**dateD** corresponds to the number of days (post-transplant) at which individuals died (or not if NA).
+
+**Death** codes 0 for individuals who remained alive throughout the following period and 1 for individuals who died during the post-grafting following period.
+
+**tenta_1 à 10** corresponds to the number of tentacles of each individual each week of the post-grafting following period (1 to 10). 
+
+**buds_1 to 10** refers to the number of buds produced by each individual each week of the post-grafting following period (1 to 10). 
+
+**tumor size before freezing** refers to the tumor size before freezing of the individual (if the hydra remains alive throughout the post-grafting follow-up period), see _Tissot et all 2023_ for an explanation of the scale used 
+
+**tenta_max** is the maximum number of tentacles developed by tracked individuals during the post-grafting follow-up period (if the hydra remains alive throughout the follow-up period).
+
+**diff_max** is the difference between the maximum number of tentacles developed during the post-grafting follow-up period minus the number of tentacles of the individual 1 week after grafting.
+
+**diff_max_R** is the difference between the maximum number of tentacles developed during the post-grafting follow-up period minus the number of tentacles of the recipient before grafting.
+
+```{r, echo=F}
+load("data_1.RData")
+load(file="DonorSpontaneous.RData")
+summary(donor_spont)
+load(file="DonorTransmitted.RData")
+summary(donor_trans)
+```

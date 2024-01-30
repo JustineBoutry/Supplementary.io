@@ -255,7 +255,7 @@ $(document).ready(function () {
   <a href="Tenta2.html">4. Tentacules numbers</a>
 </li>
 <li>
-  <a href="Budding.html">5. Tentacules and budding</a>
+  <a href="Budding.html">5. Fitness impacts</a>
 </li>
 <li>
   <a href="Packa1.html">6. About</a>
@@ -277,14 +277,14 @@ $(document).ready(function () {
 
 
 <div
-id="analysis-of-parameters-influencing-the-number-of-buds-produced-during-the-study"
+id="supernumerary-tentacles-and-fitness-parameters-of-the-host-and-the-tumors"
 class="section level1">
-<h1>Analysis of Parameters Influencing the Number of Buds Produced
-during the Study</h1>
-<div id="transmissible-tumors-dataset" class="section level2">
-<h2>Transmissible tumors dataset</h2>
-<div id="global-model-selection" class="section level3">
-<h3>Global model selection</h3>
+<h1>Supernumerary tentacles and fitness parameters of the host and the
+tumors</h1>
+<div id="budding-and-supernumerary-tentacles" class="section level2">
+<h2>Budding and supernumerary tentacles</h2>
+<div id="transmissible-tumors-dataset" class="section level3">
+<h3>Transmissible tumors dataset</h3>
 <pre class="r"><code>donor_transN &lt;- subset(donor_trans, donor_trans$abnormalities == &quot;Normal&quot;)
 
 models &lt;- glmulti(buds_10 ~ donor * donor_status * receiver * diff_maxR * Tumors,
@@ -2616,11 +2616,8 @@ to the establishment of the tumorous phenotype and the increase in the
 number of tentacles.<br />
 </p>
 </div>
-</div>
-<div id="spontaneaous-tumors-dataset" class="section level2">
-<h2>Spontaneaous tumors dataset</h2>
-<div id="global-model-selection-1" class="section level3">
-<h3>Global model selection</h3>
+<div id="spontaneaous-tumors-dataset" class="section level3">
+<h3>Spontaneaous tumors dataset</h3>
 <pre class="r"><code>donor_spontN &lt;- subset(donor_spont, donor_spont$abnormalities == &quot;Normal&quot;)
 
 models &lt;- glmulti(buds_10 ~ donor * donor_status * receiver * diff_maxR * Tumors,
@@ -7308,6 +7305,685 @@ indicator in the final analysis.<br />
 <h2>Data visualisation</h2>
 <pre><code>## `geom_smooth()` using formula = &#39;y ~ x&#39;</code></pre>
 <p><img src="Budding_files/figure-html/unnamed-chunk-20-1.png" width="672" /></p>
+</div>
+<div id="tentacles-number-and-tumor-size" class="section level2">
+<h2>Tentacles number and tumor size</h2>
+<pre><code>##        ID      Manipulator       donor    donor_status donor_tentacle  
+##  1      : 1   Justine:22   MT       : 6   NT:16        Min.   : 5.000  
+##  3      : 1   Océane :31   Rob      :12   T :37        1st Qu.: 6.000  
+##  6      : 1                SpB      :26                Median : 7.000  
+##  15     : 1                SpB_spont: 9                Mean   : 8.019  
+##  20     : 1                                            3rd Qu.:10.000  
+##  23     : 1                                            Max.   :13.000  
+##  (Other):47                                                            
+##  receiver receiver_tentacle      lot       date_draft  abnormalities
+##  SpB:26   Min.   :4.000     5      : 5   25/01  :10   Excluded: 0   
+##  TV :27   1st Qu.:5.000     6      : 5   04/02  : 6   Lost    : 0   
+##           Median :5.000     22     : 5   12/04  : 5   Normal  :49   
+##           Mean   :5.604     1      : 4   29/03  : 5   Sick    : 4   
+##           3rd Qu.:6.000     9      : 4   01/02  : 4                 
+##           Max.   :8.000     2      : 3   07/01  : 4                 
+##                             (Other):27   (Other):19                 
+##      dateT      Tumors     dateD    Death     tenta_1         tenta_2     
+##  Min.   :14.0   0: 0   Min.   :63   0:52   Min.   :3.000   Min.   :3.000  
+##  1st Qu.:20.0   1:53   1st Qu.:63   1: 1   1st Qu.:5.000   1st Qu.:5.000  
+##  Median :25.0          Median :63          Median :5.000   Median :6.000  
+##  Mean   :29.5          Mean   :63          Mean   :5.585   Mean   :5.679  
+##  3rd Qu.:40.0          3rd Qu.:63          3rd Qu.:6.000   3rd Qu.:6.000  
+##  Max.   :70.0          Max.   :63          Max.   :8.000   Max.   :8.000  
+##  NA&#39;s   :1             NA&#39;s   :52                                         
+##     tenta_3         tenta_4         tenta_5          tenta_6     
+##  Min.   :4.000   Min.   :4.000   Min.   : 2.000   Min.   :2.000  
+##  1st Qu.:5.000   1st Qu.:5.000   1st Qu.: 5.000   1st Qu.:5.000  
+##  Median :6.000   Median :6.000   Median : 6.000   Median :6.000  
+##  Mean   :5.887   Mean   :6.189   Mean   : 6.208   Mean   :6.226  
+##  3rd Qu.:6.000   3rd Qu.:7.000   3rd Qu.: 7.000   3rd Qu.:7.000  
+##  Max.   :8.000   Max.   :9.000   Max.   :10.000   Max.   :9.000  
+##                                                                  
+##     tenta_7          tenta_8          tenta_9         tenta_10     
+##  Min.   : 4.000   Min.   : 3.000   Min.   : 4.00   Min.   : 3.000  
+##  1st Qu.: 6.000   1st Qu.: 5.000   1st Qu.: 6.00   1st Qu.: 5.000  
+##  Median : 6.000   Median : 6.000   Median : 6.00   Median : 6.000  
+##  Mean   : 6.365   Mean   : 6.321   Mean   : 6.63   Mean   : 6.547  
+##  3rd Qu.: 7.000   3rd Qu.: 7.000   3rd Qu.: 7.00   3rd Qu.: 7.000  
+##  Max.   :10.000   Max.   :12.000   Max.   :13.00   Max.   :13.000  
+##  NA&#39;s   :1                         NA&#39;s   :7                       
+##      buds_1           buds_2          buds_3          buds_4       buds_5      
+##  Min.   :0.0000   Min.   :0.000   Min.   :0.000   Min.   : 0   Min.   : 0.000  
+##  1st Qu.:0.0000   1st Qu.:0.000   1st Qu.:0.000   1st Qu.: 1   1st Qu.: 2.000  
+##  Median :0.0000   Median :0.000   Median :2.000   Median : 4   Median : 5.000  
+##  Mean   :0.4906   Mean   :1.113   Mean   :2.453   Mean   : 4   Mean   : 5.698  
+##  3rd Qu.:1.0000   3rd Qu.:2.000   3rd Qu.:4.000   3rd Qu.: 6   3rd Qu.: 9.000  
+##  Max.   :4.0000   Max.   :5.000   Max.   :8.000   Max.   :11   Max.   :17.000  
+##                                                                                
+##      buds_6           buds_7           buds_8           buds_9      
+##  Min.   : 0.000   Min.   : 0.000   Min.   : 0.000   Min.   : 0.000  
+##  1st Qu.: 3.000   1st Qu.: 3.000   1st Qu.: 4.000   1st Qu.: 4.000  
+##  Median : 7.000   Median : 8.000   Median : 8.000   Median : 8.000  
+##  Mean   : 6.925   Mean   : 7.943   Mean   : 9.038   Mean   : 9.391  
+##  3rd Qu.:11.000   3rd Qu.:12.000   3rd Qu.:12.000   3rd Qu.:13.750  
+##  Max.   :23.000   Max.   :23.000   Max.   :27.000   Max.   :31.000  
+##                                                     NA&#39;s   :7       
+##     buds_10     Taille tumeur avant congelation Date congelation  
+##  Min.   : 0.0   Min.   :1.000                   Length:53         
+##  1st Qu.: 4.0   1st Qu.:3.000                   Class :character  
+##  Median : 9.0   Median :3.000                   Mode  :character  
+##  Mean   :10.4   Mean   :3.736                                     
+##  3rd Qu.:15.0   3rd Qu.:5.000                                     
+##  Max.   :32.0   Max.   :6.000                                     
+##                                                                   
+##    tenta_max         diff_max       diff_maxR          Taille     
+##  Min.   : 5.000   Min.   :0.000   Min.   :-1.000   Min.   :1.000  
+##  1st Qu.: 6.000   1st Qu.:1.000   1st Qu.: 1.000   1st Qu.:3.000  
+##  Median : 8.000   Median :2.000   Median : 2.000   Median :3.000  
+##  Mean   : 7.679   Mean   :2.094   Mean   : 2.075   Mean   :3.736  
+##  3rd Qu.: 8.000   3rd Qu.:3.000   3rd Qu.: 3.000   3rd Qu.:5.000  
+##  Max.   :13.000   Max.   :9.000   Max.   : 8.000   Max.   :6.000  
+##                                                                   
+##           groupDR   Taille_Grouped
+##  SpBTTV       :11   Small :11     
+##  SpBTSpB      : 7   Medium:18     
+##  SpB_spontTSpB: 6   Large :24     
+##  SpBNTSpB     : 5                 
+##  RobTTV       : 4                 
+##  RobNTSpB     : 3                 
+##  (Other)      :17</code></pre>
+<p><br />
+</p>
+<p>To analyze this parameters I need a bayseian approach than allow both
+multinomial lax and random factors estimations.<br />
+</p>
+<pre class="r"><code>model_multinomial &lt;- brm(Taille_Grouped ~ diff_maxR + (1 | groupDR), family = categorical(),
+    data = data_1, control = list(adapt_delta = 0.99))</code></pre>
+<pre><code>## Compiling Stan program...</code></pre>
+<pre><code>## Start sampling</code></pre>
+<pre><code>## 
+## SAMPLING FOR MODEL &#39;anon_model&#39; NOW (CHAIN 1).
+## Chain 1: 
+## Chain 1: Gradient evaluation took 8.8e-05 seconds
+## Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 0.88 seconds.
+## Chain 1: Adjust your expectations accordingly!
+## Chain 1: 
+## Chain 1: 
+## Chain 1: Iteration:    1 / 2000 [  0%]  (Warmup)
+## Chain 1: Iteration:  200 / 2000 [ 10%]  (Warmup)
+## Chain 1: Iteration:  400 / 2000 [ 20%]  (Warmup)
+## Chain 1: Iteration:  600 / 2000 [ 30%]  (Warmup)
+## Chain 1: Iteration:  800 / 2000 [ 40%]  (Warmup)
+## Chain 1: Iteration: 1000 / 2000 [ 50%]  (Warmup)
+## Chain 1: Iteration: 1001 / 2000 [ 50%]  (Sampling)
+## Chain 1: Iteration: 1200 / 2000 [ 60%]  (Sampling)
+## Chain 1: Iteration: 1400 / 2000 [ 70%]  (Sampling)
+## Chain 1: Iteration: 1600 / 2000 [ 80%]  (Sampling)
+## Chain 1: Iteration: 1800 / 2000 [ 90%]  (Sampling)
+## Chain 1: Iteration: 2000 / 2000 [100%]  (Sampling)
+## Chain 1: 
+## Chain 1:  Elapsed Time: 1 seconds (Warm-up)
+## Chain 1:                1.242 seconds (Sampling)
+## Chain 1:                2.242 seconds (Total)
+## Chain 1: 
+## 
+## SAMPLING FOR MODEL &#39;anon_model&#39; NOW (CHAIN 2).
+## Chain 2: 
+## Chain 2: Gradient evaluation took 2.9e-05 seconds
+## Chain 2: 1000 transitions using 10 leapfrog steps per transition would take 0.29 seconds.
+## Chain 2: Adjust your expectations accordingly!
+## Chain 2: 
+## Chain 2: 
+## Chain 2: Iteration:    1 / 2000 [  0%]  (Warmup)
+## Chain 2: Iteration:  200 / 2000 [ 10%]  (Warmup)
+## Chain 2: Iteration:  400 / 2000 [ 20%]  (Warmup)
+## Chain 2: Iteration:  600 / 2000 [ 30%]  (Warmup)
+## Chain 2: Iteration:  800 / 2000 [ 40%]  (Warmup)
+## Chain 2: Iteration: 1000 / 2000 [ 50%]  (Warmup)
+## Chain 2: Iteration: 1001 / 2000 [ 50%]  (Sampling)
+## Chain 2: Iteration: 1200 / 2000 [ 60%]  (Sampling)
+## Chain 2: Iteration: 1400 / 2000 [ 70%]  (Sampling)
+## Chain 2: Iteration: 1600 / 2000 [ 80%]  (Sampling)
+## Chain 2: Iteration: 1800 / 2000 [ 90%]  (Sampling)
+## Chain 2: Iteration: 2000 / 2000 [100%]  (Sampling)
+## Chain 2: 
+## Chain 2:  Elapsed Time: 1.086 seconds (Warm-up)
+## Chain 2:                1.188 seconds (Sampling)
+## Chain 2:                2.274 seconds (Total)
+## Chain 2: 
+## 
+## SAMPLING FOR MODEL &#39;anon_model&#39; NOW (CHAIN 3).
+## Chain 3: 
+## Chain 3: Gradient evaluation took 2.4e-05 seconds
+## Chain 3: 1000 transitions using 10 leapfrog steps per transition would take 0.24 seconds.
+## Chain 3: Adjust your expectations accordingly!
+## Chain 3: 
+## Chain 3: 
+## Chain 3: Iteration:    1 / 2000 [  0%]  (Warmup)
+## Chain 3: Iteration:  200 / 2000 [ 10%]  (Warmup)
+## Chain 3: Iteration:  400 / 2000 [ 20%]  (Warmup)
+## Chain 3: Iteration:  600 / 2000 [ 30%]  (Warmup)
+## Chain 3: Iteration:  800 / 2000 [ 40%]  (Warmup)
+## Chain 3: Iteration: 1000 / 2000 [ 50%]  (Warmup)
+## Chain 3: Iteration: 1001 / 2000 [ 50%]  (Sampling)
+## Chain 3: Iteration: 1200 / 2000 [ 60%]  (Sampling)
+## Chain 3: Iteration: 1400 / 2000 [ 70%]  (Sampling)
+## Chain 3: Iteration: 1600 / 2000 [ 80%]  (Sampling)
+## Chain 3: Iteration: 1800 / 2000 [ 90%]  (Sampling)
+## Chain 3: Iteration: 2000 / 2000 [100%]  (Sampling)
+## Chain 3: 
+## Chain 3:  Elapsed Time: 1.032 seconds (Warm-up)
+## Chain 3:                1.863 seconds (Sampling)
+## Chain 3:                2.895 seconds (Total)
+## Chain 3: 
+## 
+## SAMPLING FOR MODEL &#39;anon_model&#39; NOW (CHAIN 4).
+## Chain 4: 
+## Chain 4: Gradient evaluation took 2.2e-05 seconds
+## Chain 4: 1000 transitions using 10 leapfrog steps per transition would take 0.22 seconds.
+## Chain 4: Adjust your expectations accordingly!
+## Chain 4: 
+## Chain 4: 
+## Chain 4: Iteration:    1 / 2000 [  0%]  (Warmup)
+## Chain 4: Iteration:  200 / 2000 [ 10%]  (Warmup)
+## Chain 4: Iteration:  400 / 2000 [ 20%]  (Warmup)
+## Chain 4: Iteration:  600 / 2000 [ 30%]  (Warmup)
+## Chain 4: Iteration:  800 / 2000 [ 40%]  (Warmup)
+## Chain 4: Iteration: 1000 / 2000 [ 50%]  (Warmup)
+## Chain 4: Iteration: 1001 / 2000 [ 50%]  (Sampling)
+## Chain 4: Iteration: 1200 / 2000 [ 60%]  (Sampling)
+## Chain 4: Iteration: 1400 / 2000 [ 70%]  (Sampling)
+## Chain 4: Iteration: 1600 / 2000 [ 80%]  (Sampling)
+## Chain 4: Iteration: 1800 / 2000 [ 90%]  (Sampling)
+## Chain 4: Iteration: 2000 / 2000 [100%]  (Sampling)
+## Chain 4: 
+## Chain 4:  Elapsed Time: 1.161 seconds (Warm-up)
+## Chain 4:                1.079 seconds (Sampling)
+## Chain 4:                2.24 seconds (Total)
+## Chain 4:</code></pre>
+<pre class="r"><code>model_multinomial_null &lt;- brm(Taille_Grouped ~ diff_maxR + (1 | groupDR), family = categorical(),
+    data = data_1, control = list(adapt_delta = 0.99))</code></pre>
+<pre><code>## Compiling Stan program...
+## Start sampling</code></pre>
+<pre><code>## 
+## SAMPLING FOR MODEL &#39;anon_model&#39; NOW (CHAIN 1).
+## Chain 1: 
+## Chain 1: Gradient evaluation took 7.4e-05 seconds
+## Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 0.74 seconds.
+## Chain 1: Adjust your expectations accordingly!
+## Chain 1: 
+## Chain 1: 
+## Chain 1: Iteration:    1 / 2000 [  0%]  (Warmup)
+## Chain 1: Iteration:  200 / 2000 [ 10%]  (Warmup)
+## Chain 1: Iteration:  400 / 2000 [ 20%]  (Warmup)
+## Chain 1: Iteration:  600 / 2000 [ 30%]  (Warmup)
+## Chain 1: Iteration:  800 / 2000 [ 40%]  (Warmup)
+## Chain 1: Iteration: 1000 / 2000 [ 50%]  (Warmup)
+## Chain 1: Iteration: 1001 / 2000 [ 50%]  (Sampling)
+## Chain 1: Iteration: 1200 / 2000 [ 60%]  (Sampling)
+## Chain 1: Iteration: 1400 / 2000 [ 70%]  (Sampling)
+## Chain 1: Iteration: 1600 / 2000 [ 80%]  (Sampling)
+## Chain 1: Iteration: 1800 / 2000 [ 90%]  (Sampling)
+## Chain 1: Iteration: 2000 / 2000 [100%]  (Sampling)
+## Chain 1: 
+## Chain 1:  Elapsed Time: 1.075 seconds (Warm-up)
+## Chain 1:                1.412 seconds (Sampling)
+## Chain 1:                2.487 seconds (Total)
+## Chain 1: 
+## 
+## SAMPLING FOR MODEL &#39;anon_model&#39; NOW (CHAIN 2).
+## Chain 2: 
+## Chain 2: Gradient evaluation took 2.3e-05 seconds
+## Chain 2: 1000 transitions using 10 leapfrog steps per transition would take 0.23 seconds.
+## Chain 2: Adjust your expectations accordingly!
+## Chain 2: 
+## Chain 2: 
+## Chain 2: Iteration:    1 / 2000 [  0%]  (Warmup)
+## Chain 2: Iteration:  200 / 2000 [ 10%]  (Warmup)
+## Chain 2: Iteration:  400 / 2000 [ 20%]  (Warmup)
+## Chain 2: Iteration:  600 / 2000 [ 30%]  (Warmup)
+## Chain 2: Iteration:  800 / 2000 [ 40%]  (Warmup)
+## Chain 2: Iteration: 1000 / 2000 [ 50%]  (Warmup)
+## Chain 2: Iteration: 1001 / 2000 [ 50%]  (Sampling)
+## Chain 2: Iteration: 1200 / 2000 [ 60%]  (Sampling)
+## Chain 2: Iteration: 1400 / 2000 [ 70%]  (Sampling)
+## Chain 2: Iteration: 1600 / 2000 [ 80%]  (Sampling)
+## Chain 2: Iteration: 1800 / 2000 [ 90%]  (Sampling)
+## Chain 2: Iteration: 2000 / 2000 [100%]  (Sampling)
+## Chain 2: 
+## Chain 2:  Elapsed Time: 1.225 seconds (Warm-up)
+## Chain 2:                1.231 seconds (Sampling)
+## Chain 2:                2.456 seconds (Total)
+## Chain 2: 
+## 
+## SAMPLING FOR MODEL &#39;anon_model&#39; NOW (CHAIN 3).
+## Chain 3: 
+## Chain 3: Gradient evaluation took 2.3e-05 seconds
+## Chain 3: 1000 transitions using 10 leapfrog steps per transition would take 0.23 seconds.
+## Chain 3: Adjust your expectations accordingly!
+## Chain 3: 
+## Chain 3: 
+## Chain 3: Iteration:    1 / 2000 [  0%]  (Warmup)
+## Chain 3: Iteration:  200 / 2000 [ 10%]  (Warmup)
+## Chain 3: Iteration:  400 / 2000 [ 20%]  (Warmup)
+## Chain 3: Iteration:  600 / 2000 [ 30%]  (Warmup)
+## Chain 3: Iteration:  800 / 2000 [ 40%]  (Warmup)
+## Chain 3: Iteration: 1000 / 2000 [ 50%]  (Warmup)
+## Chain 3: Iteration: 1001 / 2000 [ 50%]  (Sampling)
+## Chain 3: Iteration: 1200 / 2000 [ 60%]  (Sampling)
+## Chain 3: Iteration: 1400 / 2000 [ 70%]  (Sampling)
+## Chain 3: Iteration: 1600 / 2000 [ 80%]  (Sampling)
+## Chain 3: Iteration: 1800 / 2000 [ 90%]  (Sampling)
+## Chain 3: Iteration: 2000 / 2000 [100%]  (Sampling)
+## Chain 3: 
+## Chain 3:  Elapsed Time: 1.277 seconds (Warm-up)
+## Chain 3:                1.274 seconds (Sampling)
+## Chain 3:                2.551 seconds (Total)
+## Chain 3: 
+## 
+## SAMPLING FOR MODEL &#39;anon_model&#39; NOW (CHAIN 4).
+## Chain 4: 
+## Chain 4: Gradient evaluation took 2.3e-05 seconds
+## Chain 4: 1000 transitions using 10 leapfrog steps per transition would take 0.23 seconds.
+## Chain 4: Adjust your expectations accordingly!
+## Chain 4: 
+## Chain 4: 
+## Chain 4: Iteration:    1 / 2000 [  0%]  (Warmup)
+## Chain 4: Iteration:  200 / 2000 [ 10%]  (Warmup)
+## Chain 4: Iteration:  400 / 2000 [ 20%]  (Warmup)
+## Chain 4: Iteration:  600 / 2000 [ 30%]  (Warmup)
+## Chain 4: Iteration:  800 / 2000 [ 40%]  (Warmup)
+## Chain 4: Iteration: 1000 / 2000 [ 50%]  (Warmup)
+## Chain 4: Iteration: 1001 / 2000 [ 50%]  (Sampling)
+## Chain 4: Iteration: 1200 / 2000 [ 60%]  (Sampling)
+## Chain 4: Iteration: 1400 / 2000 [ 70%]  (Sampling)
+## Chain 4: Iteration: 1600 / 2000 [ 80%]  (Sampling)
+## Chain 4: Iteration: 1800 / 2000 [ 90%]  (Sampling)
+## Chain 4: Iteration: 2000 / 2000 [100%]  (Sampling)
+## Chain 4: 
+## Chain 4:  Elapsed Time: 1.12 seconds (Warm-up)
+## Chain 4:                1.264 seconds (Sampling)
+## Chain 4:                2.384 seconds (Total)
+## Chain 4:</code></pre>
+<pre class="r"><code># Is there warnings ?
+summary(model_multinomial)</code></pre>
+<pre><code>##  Family: categorical 
+##   Links: muMedium = logit; muLarge = logit 
+## Formula: Taille_Grouped ~ diff_maxR + (1 | groupDR) 
+##    Data: data_1 (Number of observations: 53) 
+##   Draws: 4 chains, each with iter = 2000; warmup = 1000; thin = 1;
+##          total post-warmup draws = 4000
+## 
+## Group-Level Effects: 
+## ~groupDR (Number of levels: 14) 
+##                        Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS
+## sd(muMedium_Intercept)     0.97      0.70     0.06     2.66 1.00     1135
+## sd(muLarge_Intercept)      0.70      0.53     0.03     1.99 1.00     1548
+##                        Tail_ESS
+## sd(muMedium_Intercept)     1837
+## sd(muLarge_Intercept)      2077
+## 
+## Population-Level Effects: 
+##                    Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+## muMedium_Intercept     0.65      0.73    -0.76     2.16 1.00     4314     3198
+## muLarge_Intercept     -0.29      0.74    -1.78     1.10 1.00     3890     2691
+## muMedium_diff_maxR    -0.23      0.35    -0.94     0.43 1.00     2694     2819
+## muLarge_diff_maxR      0.53      0.30     0.01     1.16 1.00     3311     2309
+## 
+## Draws were sampled using sampling(NUTS). For each parameter, Bulk_ESS
+## and Tail_ESS are effective sample size measures, and Rhat is the potential
+## scale reduction factor on split chains (at convergence, Rhat = 1).</code></pre>
+<pre class="r"><code># Does it converge ?
+mcmc_trace(model_multinomial)</code></pre>
+<p><img src="Budding_files/figure-html/unnamed-chunk-22-1.png" width="672" /></p>
+<pre class="r"><code>mcmc_areas(model_multinomial)</code></pre>
+<p><img src="Budding_files/figure-html/unnamed-chunk-22-2.png" width="672" /></p>
+<pre class="r"><code># Gelman-Rubin statistic
+coda::gelman.diag(as.mcmc(model_multinomial))</code></pre>
+<pre><code>## Warning: as.mcmc.brmsfit is deprecated and will eventually be removed.</code></pre>
+<pre><code>## Potential scale reduction factors:
+## 
+##                                              Point est. Upper C.I.
+## b_muMedium_Intercept                               1.00       1.00
+## b_muLarge_Intercept                                1.00       1.00
+## b_muMedium_diff_maxR                               1.00       1.00
+## b_muLarge_diff_maxR                                1.00       1.00
+## sd_groupDR__muMedium_Intercept                     1.00       1.01
+## sd_groupDR__muLarge_Intercept                      1.00       1.00
+## r_groupDR__muMedium[MTNTSpB,Intercept]             1.01       1.01
+## r_groupDR__muMedium[MTNTTV,Intercept]              1.00       1.00
+## r_groupDR__muMedium[MTTSpB,Intercept]              1.00       1.00
+## r_groupDR__muMedium[MTTTV,Intercept]               1.00       1.00
+## r_groupDR__muMedium[RobNTSpB,Intercept]            1.00       1.00
+## r_groupDR__muMedium[RobNTTV,Intercept]             1.00       1.00
+## r_groupDR__muMedium[RobTSpB,Intercept]             1.00       1.00
+## r_groupDR__muMedium[RobTTV,Intercept]              1.00       1.00
+## r_groupDR__muMedium[SpB_spontTSpB,Intercept]       1.00       1.01
+## r_groupDR__muMedium[SpB_spontTTV,Intercept]        1.00       1.00
+## r_groupDR__muMedium[SpBNTSpB,Intercept]            1.00       1.01
+## r_groupDR__muMedium[SpBNTTV,Intercept]             1.00       1.00
+## r_groupDR__muMedium[SpBTSpB,Intercept]             1.00       1.00
+## r_groupDR__muMedium[SpBTTV,Intercept]              1.00       1.01
+## r_groupDR__muLarge[MTNTSpB,Intercept]              1.00       1.00
+## r_groupDR__muLarge[MTNTTV,Intercept]               1.00       1.00
+## r_groupDR__muLarge[MTTSpB,Intercept]               1.00       1.00
+## r_groupDR__muLarge[MTTTV,Intercept]                1.00       1.00
+## r_groupDR__muLarge[RobNTSpB,Intercept]             1.00       1.00
+## r_groupDR__muLarge[RobNTTV,Intercept]              1.00       1.00
+## r_groupDR__muLarge[RobTSpB,Intercept]              1.00       1.00
+## r_groupDR__muLarge[RobTTV,Intercept]               1.00       1.00
+## r_groupDR__muLarge[SpB_spontTSpB,Intercept]        1.00       1.00
+## r_groupDR__muLarge[SpB_spontTTV,Intercept]         1.00       1.00
+## r_groupDR__muLarge[SpBNTSpB,Intercept]             1.00       1.00
+## r_groupDR__muLarge[SpBNTTV,Intercept]              1.00       1.00
+## r_groupDR__muLarge[SpBTSpB,Intercept]              1.00       1.01
+## r_groupDR__muLarge[SpBTTV,Intercept]               1.00       1.00
+## lprior                                             1.01       1.01
+## lp__                                               1.00       1.00
+## 
+## Multivariate psrf
+## 
+## 1.01</code></pre>
+<pre class="r"><code># Effective Sample Size
+coda::effectiveSize(as.mcmc(model_multinomial))</code></pre>
+<pre><code>## Warning: as.mcmc.brmsfit is deprecated and will eventually be removed.</code></pre>
+<pre><code>##                         b_muMedium_Intercept 
+##                                     4608.076 
+##                          b_muLarge_Intercept 
+##                                     4155.504 
+##                         b_muMedium_diff_maxR 
+##                                     2952.355 
+##                          b_muLarge_diff_maxR 
+##                                     3440.206 
+##               sd_groupDR__muMedium_Intercept 
+##                                     1261.765 
+##                sd_groupDR__muLarge_Intercept 
+##                                     1692.279 
+##       r_groupDR__muMedium[MTNTSpB,Intercept] 
+##                                     4419.353 
+##        r_groupDR__muMedium[MTNTTV,Intercept] 
+##                                     4400.741 
+##        r_groupDR__muMedium[MTTSpB,Intercept] 
+##                                     2854.532 
+##         r_groupDR__muMedium[MTTTV,Intercept] 
+##                                     5386.814 
+##      r_groupDR__muMedium[RobNTSpB,Intercept] 
+##                                     4043.879 
+##       r_groupDR__muMedium[RobNTTV,Intercept] 
+##                                     3416.201 
+##       r_groupDR__muMedium[RobTSpB,Intercept] 
+##                                     2447.995 
+##        r_groupDR__muMedium[RobTTV,Intercept] 
+##                                     3444.707 
+## r_groupDR__muMedium[SpB_spontTSpB,Intercept] 
+##                                     3295.846 
+##  r_groupDR__muMedium[SpB_spontTTV,Intercept] 
+##                                     2604.097 
+##      r_groupDR__muMedium[SpBNTSpB,Intercept] 
+##                                     2371.048 
+##       r_groupDR__muMedium[SpBNTTV,Intercept] 
+##                                     4700.820 
+##       r_groupDR__muMedium[SpBTSpB,Intercept] 
+##                                     3579.917 
+##        r_groupDR__muMedium[SpBTTV,Intercept] 
+##                                     1940.218 
+##        r_groupDR__muLarge[MTNTSpB,Intercept] 
+##                                     3521.145 
+##         r_groupDR__muLarge[MTNTTV,Intercept] 
+##                                     4933.537 
+##         r_groupDR__muLarge[MTTSpB,Intercept] 
+##                                     4513.757 
+##          r_groupDR__muLarge[MTTTV,Intercept] 
+##                                     4515.813 
+##       r_groupDR__muLarge[RobNTSpB,Intercept] 
+##                                     5743.793 
+##        r_groupDR__muLarge[RobNTTV,Intercept] 
+##                                     4856.317 
+##        r_groupDR__muLarge[RobTSpB,Intercept] 
+##                                     4116.508 
+##         r_groupDR__muLarge[RobTTV,Intercept] 
+##                                     3669.311 
+##  r_groupDR__muLarge[SpB_spontTSpB,Intercept] 
+##                                     2866.421 
+##   r_groupDR__muLarge[SpB_spontTTV,Intercept] 
+##                                     3103.549 
+##       r_groupDR__muLarge[SpBNTSpB,Intercept] 
+##                                     4813.227 
+##        r_groupDR__muLarge[SpBNTTV,Intercept] 
+##                                     3455.973 
+##        r_groupDR__muLarge[SpBTSpB,Intercept] 
+##                                     4421.415 
+##         r_groupDR__muLarge[SpBTTV,Intercept] 
+##                                     3223.542 
+##                                       lprior 
+##                                     1526.607 
+##                                         lp__ 
+##                                     1236.135</code></pre>
+<pre class="r"><code># Q-Q plots for each parameter
+pp_check(model_multinomial)</code></pre>
+<pre><code>## Using 10 posterior draws for ppc type &#39;dens_overlay&#39; by default.</code></pre>
+<p><img src="Budding_files/figure-html/unnamed-chunk-22-3.png" width="672" /></p>
+<pre class="r"><code>WAIC(model_multinomial)</code></pre>
+<pre><code>## Warning: 
+## 3 (5.7%) p_waic estimates greater than 0.4. We recommend trying loo instead.</code></pre>
+<pre><code>## 
+## Computed from 4000 by 53 log-likelihood matrix
+## 
+##           Estimate  SE
+## elpd_waic    -57.9 3.9
+## p_waic        11.2 1.0
+## waic         115.7 7.8
+## 
+## 3 (5.7%) p_waic estimates greater than 0.4. We recommend trying loo instead.</code></pre>
+<pre class="r"><code>WAIC(model_multinomial_null)</code></pre>
+<pre><code>## Warning: 
+## 4 (7.5%) p_waic estimates greater than 0.4. We recommend trying loo instead.</code></pre>
+<pre><code>## 
+## Computed from 4000 by 53 log-likelihood matrix
+## 
+##           Estimate  SE
+## elpd_waic    -58.1 3.9
+## p_waic        11.2 1.0
+## waic         116.2 7.8
+## 
+## 4 (7.5%) p_waic estimates greater than 0.4. We recommend trying loo instead.</code></pre>
+<pre class="r"><code># Perform PPC
+ppc_model1 &lt;- pp_check(model_multinomial)</code></pre>
+<pre><code>## Using 10 posterior draws for ppc type &#39;dens_overlay&#39; by default.</code></pre>
+<pre class="r"><code>ppc_model2 &lt;- pp_check(model_multinomial_null)</code></pre>
+<pre><code>## Using 10 posterior draws for ppc type &#39;dens_overlay&#39; by default.</code></pre>
+<pre class="r"><code># Plot PPC
+plot(ppc_model1)</code></pre>
+<p><img src="Budding_files/figure-html/unnamed-chunk-22-4.png" width="672" /></p>
+<pre class="r"><code>plot(ppc_model2)</code></pre>
+<p><img src="Budding_files/figure-html/unnamed-chunk-22-5.png" width="672" /></p>
+<p>The simulation converged, there is no important warnings and it seems
+(based on WAIC) than the model with the explanatory factor of the
+supernumerary tentacles explains better the data.</p>
+<pre class="r"><code>summary(model_multinomial)</code></pre>
+<pre><code>##  Family: categorical 
+##   Links: muMedium = logit; muLarge = logit 
+## Formula: Taille_Grouped ~ diff_maxR + (1 | groupDR) 
+##    Data: data_1 (Number of observations: 53) 
+##   Draws: 4 chains, each with iter = 2000; warmup = 1000; thin = 1;
+##          total post-warmup draws = 4000
+## 
+## Group-Level Effects: 
+## ~groupDR (Number of levels: 14) 
+##                        Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS
+## sd(muMedium_Intercept)     0.97      0.70     0.06     2.66 1.00     1135
+## sd(muLarge_Intercept)      0.70      0.53     0.03     1.99 1.00     1548
+##                        Tail_ESS
+## sd(muMedium_Intercept)     1837
+## sd(muLarge_Intercept)      2077
+## 
+## Population-Level Effects: 
+##                    Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+## muMedium_Intercept     0.65      0.73    -0.76     2.16 1.00     4314     3198
+## muLarge_Intercept     -0.29      0.74    -1.78     1.10 1.00     3890     2691
+## muMedium_diff_maxR    -0.23      0.35    -0.94     0.43 1.00     2694     2819
+## muLarge_diff_maxR      0.53      0.30     0.01     1.16 1.00     3311     2309
+## 
+## Draws were sampled using sampling(NUTS). For each parameter, Bulk_ESS
+## and Tail_ESS are effective sample size measures, and Rhat is the potential
+## scale reduction factor on split chains (at convergence, Rhat = 1).</code></pre>
+<pre class="r"><code>tab_model(model_multinomial, show.intercept = F)</code></pre>
+<pre><code>## &#39;bayes_R2&#39; is not defined for unordered categorical models.</code></pre>
+<table style="border-collapse:collapse; border:none;">
+<tr>
+<th style="border-top: double; text-align:center; font-style:normal; font-weight:bold; padding:0.2cm;  text-align:left; ">
+ 
+</th>
+<th colspan="2" style="border-top: double; text-align:center; font-style:normal; font-weight:bold; padding:0.2cm; ">
+Taille_Grouped: Medium
+</th>
+<th colspan="2" style="border-top: double; text-align:center; font-style:normal; font-weight:bold; padding:0.2cm; ">
+Taille_Grouped: Large
+</th>
+<th colspan="2" style="border-top: double; text-align:center; font-style:normal; font-weight:bold; padding:0.2cm; ">
+Taille_Grouped: Medium_diff
+</th>
+<th colspan="2" style="border-top: double; text-align:center; font-style:normal; font-weight:bold; padding:0.2cm; ">
+Taille_Grouped: Large_diff
+</th>
+</tr>
+<tr>
+<td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  text-align:left; ">
+Predictors
+</td>
+<td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  ">
+Odds Ratios
+</td>
+<td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  ">
+CI (95%)
+</td>
+<td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  ">
+Odds Ratios
+</td>
+<td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  ">
+CI (95%)
+</td>
+<td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  ">
+Odds Ratios
+</td>
+<td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  col7">
+CI (95%)
+</td>
+<td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  col8">
+Odds Ratios
+</td>
+<td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  col9">
+CI (95%)
+</td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
+maxR
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+1.67
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+1.01 – 3.18
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  col7">
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  col8">
+0.80
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  col9">
+0.39 – 1.54
+</td>
+</tr>
+<tr>
+<td colspan="9" style="font-weight:bold; text-align:left; padding-top:.8em;">
+Random Effects
+</td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm;">
+σ<sup>2</sup>
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="8">
+-0.02
+</td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm;">
+τ<sub>00</sub>
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="8">
+0.62
+</td>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm;">
+ICC
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="8">
+-0.03
+</td>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm;">
+N <sub>groupDR</sub>
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="8">
+14
+</td>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm; border-top:1px solid;">
+Observations
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left; border-top:1px solid;" colspan="8">
+53
+</td>
+</tr>
+</table>
+</div>
+<div id="data-visualisation-1" class="section level2">
+<h2>Data visualisation</h2>
+<pre class="r"><code># Calculer les statistiques descriptives pour les groupes
+summary_stats &lt;- data_1 %&gt;%
+  group_by(Taille_Grouped) %&gt;%
+  summarize(
+    mean_diff_maxR = mean(diff_maxR),
+    sd_diff_maxR = sd(diff_maxR),
+    n = n()
+  )
+summary_stats</code></pre>
+<pre><code>## # A tibble: 3 × 4
+##   Taille_Grouped mean_diff_maxR sd_diff_maxR     n
+##   &lt;fct&gt;                   &lt;dbl&gt;        &lt;dbl&gt; &lt;int&gt;
+## 1 Small                    1.64         1.63    11
+## 2 Medium                   1.5          1.15    18
+## 3 Large                    2.71         1.97    24</code></pre>
+<pre class="r"><code># Définir les étiquettes et les intervalles de confiance
+labels &lt;- c(&quot;OR: 0.81 [0.39 – 1.54]&quot;, &quot;OR: 1.67 [1.01 – 3.15]&quot;)
+
+ggplot(data = data_1, aes(x = as.factor(Taille_Grouped), y = diff_maxR)) +
+  geom_boxplot(color = &quot;darkred&quot;, fill = &quot;lightgrey&quot;, width = 0.6) +
+  geom_jitter(color = &quot;darkred&quot;, size = 3, alpha = 0.7, width = 0.1) +  # Use geom_jitter for better positioning
+  geom_text(
+    aes(x = &quot;Medium&quot;, y = max(data_1$diff_maxR) + 0.5, label = labels[1]),
+    vjust = -1,
+    size = 2.5
+  ) +
+  geom_text(
+    aes(x = &quot;Large&quot;, y = max(data_1$diff_maxR) + 0.5, label = labels[2]),
+    vjust = -1,
+    size = 2.5
+  ) +
+  labs(
+    x = &quot;Tumor Size&quot;,
+    y = &quot;Average Number of Tentacles&quot;
+  ) +
+  theme_minimal()</code></pre>
+<pre><code>## Warning: Use of `data_1$diff_maxR` is discouraged.
+## ℹ Use `diff_maxR` instead.
+## Use of `data_1$diff_maxR` is discouraged.
+## ℹ Use `diff_maxR` instead.</code></pre>
+<p><img src="Budding_files/figure-html/unnamed-chunk-24-1.png" width="672" /></p>
 </div>
 </div>
 

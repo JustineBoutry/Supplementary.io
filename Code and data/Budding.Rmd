@@ -20,6 +20,13 @@ library(dplyr)
 library(patchwork)
 library(survival)
 library(formatR)
+library(StanHeaders)
+library(rstan)
+library(Rcpp)
+library(RcppEigen)
+library(bayesplot)
+library(coda)
+library(brms)
 
 load("data_1.RData")
 load(file="DonorSpontaneous.RData")
@@ -31,11 +38,11 @@ load(file="DonorTransmitted.RData")
 knitr::opts_chunk$set(tidy.opts=list(width.cutoff=80), tidy=TRUE)
 ```
 
-# Analysis of Parameters Influencing the Number of Buds Produced during the Study
+# Supernumerary tentacles and fitness parameters of the host and the tumors
 
-## Transmissible tumors dataset
+## Budding and supernumerary tentacles
 
-### Global model selection
+### Transmissible tumors dataset
 
 ```{r, results='hide'}
 donor_transN <- subset(donor_trans, donor_trans$abnormalities=="Normal")
@@ -150,9 +157,7 @@ tab_model(best_rt10,best_rt9,best_rt8,best_rt7,best_rt6,best_rt5,best_rt4,best_r
 The relationship between the number of tentacles, the tumor presence, and the budding seems to appear only after the third week, corresponding to the establishment of the tumorous phenotype and the increase in the number of tentacles.
 \
 
-## Spontaneaous tumors dataset
-
-### Global model selection
+### Spontaneaous tumors dataset
 
 ```{r, message=FALSE, results='hide'}
 donor_spontN <- subset(donor_spont, donor_spont$abnormalities=="Normal")
@@ -382,4 +387,121 @@ ggplot(data = data_1N, aes(x = diff_maxR, y = buds_10, color = Tumors)) +
   scale_color_manual(values = c("Chartreuse4", "darkred")) +  # Changer les couleurs manuellement
   theme(legend.position = "top")+
   scale_x_continuous(breaks = seq(-1, 9, by = 2))
+```
+
+## Tentacles number and tumor size
+
+```{R, echo=F}
+load(file="data_1.RData")
+data_1$Taille <-  data_1$`Taille tumeur avant congelation` 
+
+load(file="DonorSpontaneous.RData")
+donor_spont$Taille <-  donor_spont$`Taille tumeur avant congelation` 
+
+load(file="DonorTransmitted.RData")
+donor_trans$Taille <-  donor_trans$`Taille tumeur avant congelation` 
+
+donor_trans$groupDR <- paste0(donor_trans$donor, donor_trans$donor_status, donor_trans$receiver)
+donor_spont$groupDR <- paste0(donor_spont$donor, donor_spont$donor_status, donor_spont$receiver)
+data_1$groupDR <- as.factor(paste0(data_1$donor, data_1$donor_status, data_1$receiver))
+
+data_1 <- subset(data_1, data_1$Taille!="NA" & data_1$Taille!=0 & data_1$diff_maxR!=0)
+donor_trans <- subset(donor_trans, donor_trans$Taille!="NA"& donor_trans$Taille!=0)
+donor_spont <- subset(donor_spont, donor_spont$Taille!="NA"& donor_spont$Taille!=0)
+
+
+data_1$Taille_Grouped <- ifelse(data_1$Taille %in% c("1", "2"), "Small",
+                                ifelse(data_1$Taille %in% c("3", "4"), "Medium", "Large"))
+
+donor_spont$Taille_Grouped <- ifelse(donor_spont$Taille %in% c("1", "2"), "Small",
+                                ifelse(donor_spont$Taille %in% c("3", "4"), "Medium", "Large"))
+
+donor_trans$Taille_Grouped <- ifelse(donor_trans$Taille %in% c("1", "2"), "Small",
+                                     ifelse(donor_trans$Taille %in% c("3", "4"), "Medium", "Large"))
+# Change order of factor levels
+data_1$Taille_Grouped <- factor(
+  data_1$Taille_Grouped,
+  levels = c("Small", "Medium", "Large")
+)
+summary(data_1)
+```
+\
+
+To analyze this parameters I need a bayseian approach than allow both multinomial lax and random factors estimations.
+\
+
+```{r }
+model_multinomial <- brm(Taille_Grouped ~ diff_maxR + (1|groupDR), 
+                         family = categorical(), data = data_1,
+                         control = list(adapt_delta = 0.99))
+
+model_multinomial_null <- brm(Taille_Grouped ~ diff_maxR + (1|groupDR), 
+                         family = categorical(), data = data_1,
+                         control = list(adapt_delta = 0.99))
+# Is there warnings ?
+summary(model_multinomial)
+# Does it converge ?
+mcmc_trace(model_multinomial)
+mcmc_areas(model_multinomial)
+
+# Gelman-Rubin statistic
+coda::gelman.diag(as.mcmc(model_multinomial))
+# Effective Sample Size
+coda::effectiveSize(as.mcmc(model_multinomial))
+# Q-Q plots for each parameter
+pp_check(model_multinomial)
+
+WAIC(model_multinomial)
+WAIC(model_multinomial_null)
+
+# Perform PPC
+ppc_model1 <- pp_check(model_multinomial)
+ppc_model2 <- pp_check(model_multinomial_null)
+
+# Plot PPC
+plot(ppc_model1)
+plot(ppc_model2)
+```
+
+The simulation converged, there is no important warnings and it seems (based on WAIC) than the model with the explanatory factor of the supernumerary tentacles explains better the data.
+
+```{r}
+summary(model_multinomial)
+tab_model(model_multinomial, show.intercept =F)
+```
+
+## Data visualisation
+
+```{r}
+# Calculer les statistiques descriptives pour les groupes
+summary_stats <- data_1 %>%
+  group_by(Taille_Grouped) %>%
+  summarize(
+    mean_diff_maxR = mean(diff_maxR),
+    sd_diff_maxR = sd(diff_maxR),
+    n = n()
+  )
+summary_stats
+
+# Définir les étiquettes et les intervalles de confiance
+labels <- c("OR: 0.81 [0.39 – 1.54]", "OR: 1.67 [1.01 – 3.15]")
+
+ggplot(data = data_1, aes(x = as.factor(Taille_Grouped), y = diff_maxR)) +
+  geom_boxplot(color = "darkred", fill = "lightgrey", width = 0.6) +
+  geom_jitter(color = "darkred", size = 3, alpha = 0.7, width = 0.1) +  # Use geom_jitter for better positioning
+  geom_text(
+    aes(x = "Medium", y = max(data_1$diff_maxR) + 0.5, label = labels[1]),
+    vjust = -1,
+    size = 2.5
+  ) +
+  geom_text(
+    aes(x = "Large", y = max(data_1$diff_maxR) + 0.5, label = labels[2]),
+    vjust = -1,
+    size = 2.5
+  ) +
+  labs(
+    x = "Tumor Size",
+    y = "Average Number of Tentacles"
+  ) +
+  theme_minimal()
 ```
